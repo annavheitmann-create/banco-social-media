@@ -1,0 +1,577 @@
+<title>Pauta da Anna</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE everyday work tool, divertido mas organizado
+   IDEA a pauta de uma redação de revista: a semana na parede, arcos editoriais, fichas de pauta
+   PICTURE a fita do bimestre: 24 posts em 4 arcos, cor = objetivo, cheio = publicado; abaixo, os próximos 3 posts grandes
+   COLOUR branco, tinta ameixa, faixa berry #7b1e57; objetivos: lima (crescer), rosa (autoridade), coral (vender)
+   TYPE Familjen Grotesk + Inter
+   LAYOUT laptop: faixa berry com título à esquerda e fita à direita, nav fixa, cards em 3 colunas; phone: título, fita, cards empilhados */
+:root{color-scheme:light dark;
+--bg:light-dark(#ffffff,#150e13);--ink:light-dark(#1f1420,#f6edf2);--mut:light-dark(#6d5a68,#bba9b5);
+--line:light-dark(#eadbe3,#34252f);--surf:light-dark(#fbf4f7,#1e151b);--berry:light-dark(#7b1e57,#4a1236);
+--onb:#fff4f9;--lima:#c8f169;--rosa:#f4bcd8;--coral:#ff8f6b;--tinta:#1f1420;--warn:light-dark(#b3261e,#ff8a80)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,sans-serif;overflow-x:clip}
+h1,h2,h3,h4{font-family:"Familjen Grotesk",Inter,sans-serif;line-height:1.08;letter-spacing:-.02em;margin:0}
+h2{font-size:clamp(28px,3.4vw,40px)}h3{font-size:20px}
+p{margin:0 0 .7em}
+button,select,input,textarea{font:inherit;color:inherit}
+.wrap{max-width:1240px;margin:0 auto}
+.band{padding-left:max(5vw,16px,env(safe-area-inset-left,0px));padding-right:max(5vw,16px,env(safe-area-inset-right,0px))}
+.hero{background:var(--berry);color:var(--onb);margin-top:calc(-1*env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 32px);padding-bottom:28px}
+.hero .wrap{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:32px;align-items:end}
+.hero h1{font-size:clamp(40px,5.4vw,64px)}
+.hero p{color:#f3d6e5;max-width:42ch;margin-top:10px}
+.ribbon{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.arc{display:flex;flex-direction:column;gap:6px}
+.arc b{font:600 13px/1.25 Inter,sans-serif;color:#f3d6e5;min-height:2.5em}
+.cells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.cell{aspect-ratio:1;border-radius:6px;border:2px solid var(--c);background:rgba(0,0,0,.18);cursor:pointer;padding:0;position:relative}
+.cell.done{background:var(--c)}
+.cell.now{outline:2px solid #fff;outline-offset:2px}
+.cell span{position:absolute;inset:auto 0 3px;font:600 11px/1 Inter;color:var(--c)}
+.cell.done span{color:var(--tinta)}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:12px;font-size:13px;color:#f3d6e5}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:3px;background:var(--c);margin-right:5px;vertical-align:-1px}
+.stats{display:flex;gap:22px;margin-top:14px;flex-wrap:wrap}
+.stats div{font-size:13px;color:#f3d6e5}.stats strong{display:block;font:700 28px/1 "Familjen Grotesk";color:#fff}
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:6}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-block:8px}
+nav a{flex:none;text-decoration:none;color:var(--mut);font-weight:600;font-size:15px;padding:9px 13px;border-radius:999px}
+nav a:hover{color:var(--ink);background:var(--surf)}
+nav a.on{background:var(--ink);color:var(--bg)}
+main{padding-block:28px 64px}
+.head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:18px}
+.head p{color:var(--mut);max-width:62ch;margin:6px 0 0}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:18px}
+.post{display:flex;flex-direction:column;gap:10px;cursor:pointer;text-align:left;width:100%}
+.post:hover{border-color:var(--mut)}
+.date{font:700 15px/1 "Familjen Grotesk";color:var(--mut)}
+.big{font:700 clamp(40px,5vw,56px)/.9 "Familjen Grotesk";letter-spacing:-.03em}
+.post h3{font-size:22px}
+.gancho{font-size:15px;color:var(--mut);border-left:0;margin:0}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;font-weight:600;padding:3px 9px;border-radius:999px;border:1px solid var(--line);white-space:nowrap;background:var(--bg)}
+.chip.o{background:var(--c);color:var(--tinta);border-color:transparent}
+.st{font-size:13px;font-weight:600;color:var(--mut)}
+.st.pub{color:light-dark(#2f6b12,#c8f169)}
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--ink);background:var(--ink);color:var(--bg);border-radius:999px;padding:10px 18px;font-weight:600;cursor:pointer;min-height:44px}
+.btn.ghost{background:transparent;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:var(--ink)}
+.btn:disabled{opacity:.5;cursor:default}
+.btn.sm{padding:6px 12px;min-height:36px;font-size:14px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.weekh{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin:28px 0 10px;flex-wrap:wrap}
+.weekh h3{font-size:22px}.weekh span{color:var(--mut);font-size:14px}
+.list{border-top:1px solid var(--line)}
+.li{display:grid;grid-template-columns:88px minmax(0,1fr) auto;gap:16px;align-items:center;padding:14px 4px;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;width:100%;text-align:left}
+.li:hover{background:var(--surf)}
+.li .dd{font:700 30px/1 "Familjen Grotesk";letter-spacing:-.02em}
+.li .dd small{display:block;font:500 13px Inter;color:var(--mut);letter-spacing:0;margin-top:3px}
+.li h4{font-size:18px;margin-bottom:6px}
+.filters{display:flex;gap:8px;flex-wrap:wrap}
+select,input[type=text],input[type=number],input[type=date],textarea{border:1px solid var(--line);background:var(--bg);border-radius:10px;padding:9px 11px;font-size:16px;min-height:44px}
+textarea{width:100%;min-height:140px;resize:vertical;line-height:1.5}
+label{font-size:14px;font-weight:600;display:flex;flex-direction:column;gap:5px}
+.seg{display:flex;flex-wrap:wrap;gap:6px}
+.seg button{border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:14px;font-weight:600;min-height:38px}
+.seg button.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.drawer{position:fixed;inset:0;z-index:20;display:flex;justify-content:flex-end;background:rgba(20,8,16,.45)}
+.panel{background:var(--bg);width:min(680px,100%);height:100%;overflow-y:auto;padding:24px max(24px,env(safe-area-inset-right,0px)) calc(40px + env(safe-area-inset-bottom,0px)) 24px;padding-top:calc(20px + env(safe-area-inset-top,0px))}
+.panel h2{font-size:clamp(26px,3vw,34px);margin:10px 0 12px}
+.sec{margin-top:22px}.sec h4{font-size:15px;margin-bottom:8px;color:var(--mut);font-family:Inter;letter-spacing:0;font-weight:600}
+ol.slides{margin:0;padding-left:22px}ol.slides li{margin-bottom:7px}
+.box{background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:14px;white-space:pre-wrap}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.metrics input{width:100%}
+.close{float:right}
+.fmt h3{margin-bottom:6px}.fmt p{font-size:15px}
+.fmt dl{margin:0;font-size:15px}.fmt dt{font-weight:600;margin-top:8px}.fmt dd{margin:2px 0 0;color:var(--mut)}
+.trend{display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.trend .tag{font-size:13px;font-weight:600}
+.flag{padding:10px 12px;border-radius:10px;border:1px solid var(--line);margin-bottom:8px;font-size:15px}
+.flag.alto{border-color:var(--warn)}.flag.alto b{color:var(--warn)}
+.ok{color:light-dark(#2f6b12,#c8f169);font-weight:600}
+.note{font-size:14px;color:var(--mut)}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:13px;color:var(--mut);font-weight:600}
+td.n,th.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.bar{display:grid;grid-template-columns:120px minmax(0,1fr) 64px;gap:10px;align-items:center;margin-bottom:8px;font-size:14px}
+.bar div{height:14px;border-radius:4px;background:var(--c,var(--rosa))}
+.empty{padding:28px;border:1px dashed var(--line);border-radius:14px;color:var(--mut);text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 16px;border-radius:999px;font-size:14px;z-index:30}
+.brandp li{margin-bottom:6px}
+.pill-list{display:flex;flex-wrap:wrap;gap:6px}
+.pill-list span{font-size:14px;padding:4px 10px;border-radius:8px;background:var(--surf);border:1px solid var(--line)}
+.pill-list.no span{text-decoration:line-through;color:var(--mut)}
+@media(max-width:900px){.hero .wrap{grid-template-columns:minmax(0,1fr);gap:20px}.grid3{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:640px){.grid2{grid-template-columns:minmax(0,1fr)}.ribbon{grid-template-columns:repeat(2,minmax(0,1fr))}.li{grid-template-columns:64px minmax(0,1fr)}.li .st{grid-column:2}.li .dd{font-size:24px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.bar{grid-template-columns:90px minmax(0,1fr) 52px}.panel{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}}
+@media(prefers-reduced-motion:no-preference){.cell{transition:transform .15s}.cell:hover{transform:scale(1.08)}}
+</style>
+
+<header class="hero band">
+  <div class="wrap">
+    <div>
+      <h1>Pauta da Anna</h1>
+      <p>Dezembro e janeiro planejados em quatro arcos. Cada quadradinho é um post: a cor mostra o objetivo, e ele fica cheio quando você publica.</p>
+      <div class="stats" id="stats"></div>
+    </div>
+    <div>
+      <div class="ribbon" id="ribbon"></div>
+      <div class="legend"><span><i style="--c:var(--lima)"></i>Crescer</span><span><i style="--c:var(--rosa)"></i>Autoridade</span><span><i style="--c:var(--coral)"></i>Vender</span></div>
+    </div>
+  </div>
+</header>
+<nav class="band"><div class="wrap" id="nav"></div></nav>
+<main class="band"><div class="wrap" id="view"></div></main>
+<div id="drawer" hidden></div>
+<div id="toast" class="toast" hidden></div>
+
+<script>
+{
+const OBJ={crescer:{n:'Crescer',c:'var(--lima)',f:'Topo de funil: alcance e compartilhamento'},autoridade:{n:'Autoridade',c:'var(--rosa)',f:'Meio de funil: salvamentos e confiança'},vender:{n:'Vender',c:'var(--coral)',f:'Fundo de funil: conversas e propostas'}};
+const PIL={est:'Estratégia na prática',ref:'Referências culturais',pes:'Pessoal com propósito',not:'Notícias e trends',bas:'Bastidores e projetos conceituais'};
+const ARCOS=[
+ {id:1,n:'Fechar o ano com estratégia',q:'2 a 11 de dez',o:'Atrair gente nova e mostrar como você pensa.'},
+ {id:2,n:'Retrospectiva que ensina',q:'14 a 23 de dez',o:'Identificação e compartilhamento no clima de fim de ano.'},
+ {id:3,n:'Planejar 2027 de verdade',q:'28 de dez a 13 de jan',o:'Conteúdo salvável no momento em que as clínicas planejam o ano.'},
+ {id:4,n:'Como eu trabalho',q:'15 a 29 de jan',o:'Transformar autoridade em conversas e propostas.'}];
+
+const POSTS=[
+{id:'p01',d:'2026-12-02',a:1,obj:'crescer',pil:'ref',fmt:'Carrossel',tema:'O calendário de dezembro montado pelas emoções de Divertida Mente',gancho:'Dezembro chegou, e cada emoção da sua clínica quer montar o calendário de um jeito.',porque:'Abre o bimestre com sua marca registrada: referência conhecida levando a uma pergunta estratégica. Alta chance de compartilhamento entre colegas de clínica.',roteiro:['Capa: "Dezembro chegou, e cada emoção da sua clínica quer montar o calendário de um jeito."','Alegria: só quer post de Natal, "boas festas" e foto da equipe de gorro.','Medo: "melhor não postar nada até janeiro, vai que ninguém vê".','Raiva: "o alcance caiu e a culpa é do algoritmo".','Ansiedade: 47 ideias para esta semana e nenhuma prioridade.','Tristeza: "em dezembro ninguém lê legenda mesmo".','Quem deveria segurar o painel: a pergunta "o que meu público precisa saber antes de janeiro?"','Três pautas que respondem a isso: como fica o atendimento nas festas, as dúvidas que mais apareceram no ano, o que muda na clínica em 2027.','CTA'],legenda:'Todas as emoções têm um pouco de razão, e é por isso que nenhuma delas deveria montar o calendário sozinha. Quando a pergunta que guia o mês é o que o público precisa saber, dezembro deixa de ser só post de data comemorativa.',cta:'Qual emoção anda mandando no calendário da sua clínica?',prep:'Ilustrações ou prints dos personagens que você tenha direito de usar; dá para fazer com cores de cada emoção e só texto.'},
+{id:'p02',d:'2026-12-04',a:1,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'Como uma única pergunta de paciente vira um mês de conteúdo',gancho:'Uma pergunta que chega toda semana na recepção pode render um mês inteiro de posts. Vou mostrar com um exemplo.',porque:'Tema da sua lista de próximos temas e muito salvável. Mostra método, que é o que você vende.',roteiro:['Capa com o gancho.','A pergunta de exemplo: "Vou sentir dor?", comum antes de vários procedimentos.','Post 1: o que acontece em cada etapa do atendimento, explicado pela própria profissional.','Post 2: bastidor de como a equipe cuida do conforto de quem chega.','Post 3: as dúvidas que vêm junto ("quanto tempo dura?", "posso trabalhar depois?").','Post 4: Reel curto com a profissional respondendo a pergunta olhando para a câmera.','Stories: caixinha para recolher novas versões da mesma dúvida.','O raciocínio: uma dúvida mostra um momento da jornada. Cada post atende a uma parte desse momento.','CTA'],legenda:'A pergunta que você mais ouve é um mapa do que o público sente antes de marcar. Em vez de responder uma vez e seguir, dá para olhar para ela de vários ângulos e montar uma sequência que acompanha a pessoa até a consulta. O conteúdo técnico de cada post fica com a profissional, que é quem pode orientar.',cta:'Qual pergunta aparece mais na rotina da sua clínica?',prep:'Só design. Use uma pergunta genérica, sem citar paciente.'},
+{id:'p03',d:'2026-12-07',a:1,obj:'crescer',pil:'not',fmt:'Reel',tema:'Novidades do Instagram de novembro e o que cada uma muda para uma clínica',gancho:'O Instagram mexeu em algumas coisas em novembro. Separei as que importam para quem cuida do perfil de uma clínica.',porque:'Notícia traz alcance e mostra que você acompanha a plataforma. Seu Reel de notícia sobre autoria foi um dos seus maiores destaques.',roteiro:['0–3s: você na tela com o texto "O que mudou no Instagram e o que fazer com isso".','Novidade 1, com o que ela muda na prática para uma clínica.','Novidade 2, idem.','Novidade 3, idem.','Fechamento: o que continua igual (conteúdo que responde dúvidas reais).','CTA falado + na legenda.'],legenda:'Antes de gravar, confira cada novidade no anúncio oficial da Meta ou no Centro de Ajuda, porque muita coisa que circula ainda está em teste. Na legenda, cite a fonte e diga o que já está liberado e o que ainda é teste.',cta:'Qual dessas mudanças você quer testar primeiro no perfil da clínica?',prep:'Gravação falando para a câmera, uns 40 a 60 segundos. Use o Radar de trends desta página como ponto de partida e confira as fontes.'},
+{id:'p04',d:'2026-12-09',a:1,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'Por que duas clínicas da mesma especialidade precisam de calendários diferentes',gancho:'Duas clínicas de dermatologia, na mesma cidade, com os mesmos serviços. Os calendários delas não deveriam ser iguais.',porque:'Mostra que você não vende pacote pronto, e conversa direto com o seu diferencial.',roteiro:['Capa com o gancho e o aviso "exemplo conceitual".','Clínica A: abriu há um ano, ninguém no bairro conhece a equipe ainda.','Clínica B: atende há 15 anos, tem pacientes fiéis e acabou de lançar um serviço novo.','O que a A precisa: apresentar quem atende, explicar como funciona a primeira consulta, criar familiaridade.','O que a B precisa: comunicar a novidade sem perder a confiança que já tem.','Os dois calendários de uma semana lado a lado.','A conclusão: a especialidade é igual, mas o momento, o público e o objetivo de cada uma são diferentes.','CTA'],legenda:'Copiar o calendário de outra clínica da mesma área parece um atalho, mas cada perfil tem um momento e um público próprios. O exemplo é conceitual, e mostra por que eu começo qualquer planejamento entendendo o contexto antes de pensar em pauta.',cta:'Em que momento a sua clínica está hoje: apresentando, consolidando ou mudando?',prep:'Design com duas colunas/cores, uma para cada clínica.'},
+{id:'p05',d:'2026-12-11',a:1,obj:'crescer',pil:'pes',fmt:'Carrossel',tema:'O que a faculdade de Enfermagem me ensinou sobre comunicação na saúde',gancho:'Passei os últimos anos entre estágio de Enfermagem e calendário editorial. As duas coisas conversam mais do que parece.',porque:'Post de conexão: apresenta você para quem chegou nas últimas semanas e mostra um diferencial real.',roteiro:['Capa com o gancho e uma foto sua (jaleco ou estudando + notebook).','Quem eu sou em duas linhas.','Lição 1: anamnese antes de qualquer conduta. No conteúdo, entender o perfil antes de sugerir estratégia.','Lição 2: falar de um jeito que o paciente entenda. No conteúdo, clareza vale mais que termo técnico.','Lição 3: registrar tudo. No conteúdo, acompanhar o que funcionou para decidir o próximo mês.','O que eu não faço aqui: orientação clínica. Meu assunto é comunicação.','CTA'],legenda:'A Enfermagem me deu um jeito de olhar para o atendimento que levo para cada estratégia. Ela aparece aqui como perspectiva sobre o setor, e não como orientação clínica.',cta:'Se você é da saúde, que parte da sua formação aparece na sua comunicação?',prep:'2 ou 3 fotos suas reais: estudando, no notebook, um detalhe do jaleco.'},
+{id:'p06',d:'2026-12-14',a:2,obj:'crescer',pil:'not',fmt:'Carrossel',tema:'A retrospectiva da clínica que vale postar e a que só a equipe acha interessante',gancho:'Todo dezembro chega a época das retrospectivas. Algumas a clínica publica para o público, outras só a equipe vai achar interessantes.',porque:'Aproveita o clima de retrospectiva de fim de ano, que já está no feed de todo mundo, e entrega um modelo prático.',roteiro:['Capa com o gancho.','A retrospectiva que pouca gente lê: número de seguidores, curtidas, "obrigada por tudo".','A que conversa com o público: as cinco dúvidas que mais chegaram no ano.','O que mudou na clínica (equipe, espaço, serviço novo) e por quê.','Um bastidor que o público nunca viu.','O que vem em 2027.','Modelo para copiar: 5 slides, um por item.','CTA'],legenda:'A retrospectiva pode ser mais do que um resumo de números. Quando ela mostra o que o público perguntou e o que a clínica fez com isso, vira um post útil para quem segue e para quem está chegando.',cta:'Salve para montar a retrospectiva da sua clínica.',prep:'Só design. Se a Retrospectiva do Spotify (Wrapped) sair na mesma semana, use a estética dela como gancho visual.'},
+{id:'p07',d:'2026-12-16',a:2,obj:'crescer',pil:'bas',fmt:'Reel',tema:'Meus posts que não funcionaram este ano e o que cada um me ensinou',gancho:'Esses são os posts que eu tinha certeza que iam funcionar e passaram batido.',porque:'Adaptação da trend de mostrar os próprios "flops". Mostrar o erro com raciocínio mostra mais segurança do que só mostrar os acertos.',roteiro:['0–3s: "Os posts que eu tinha certeza que iam funcionar."','Print do post 1 + o que você acha que faltou (gancho, momento, formato).','Print do post 2 + aprendizado.','Print do post 3 + aprendizado.','Fechamento: "É por isso que eu acompanho o que acontece depois de cada post."','CTA.'],legenda:'Nem todo post vai bem, e tudo bem. O que faz diferença é olhar para ele e entender por quê. Esses três me ensinaram mais do que muitos que foram bem.',cta:'Qual post seu você tinha certeza que ia funcionar e passou batido?',prep:'Escolha 3 posts seus reais com desempenho abaixo da sua média. Gravação rápida com prints na tela.'},
+{id:'p08',d:'2026-12-18',a:2,obj:'autoridade',pil:'ref',fmt:'Carrossel',tema:'Vingadores e o problema de colocar heróis demais no mesmo post',gancho:'Antes de juntar todos os heróis num filme só, a Marvel apresentou cada um no seu próprio filme. Dá para fazer o mesmo com os serviços da sua clínica.',porque:'Pega carona no lançamento de Vingadores: Doomsday (confira a data de estreia no Brasil) e trata uma dor muito comum: o post institucional que tenta falar de tudo.',roteiro:['Capa com o gancho.','O post "conheça nossos serviços" com 9 serviços e nenhuma explicação.','O que a Marvel fez: cada herói teve uma história antes do encontro.','Na clínica: cada serviço ganha a sua sequência (para quem é, como funciona, dúvidas, bastidor).','Só depois vem o "filme do encontro": o post que mostra como os serviços se conectam.','Exemplo de ordem para 4 semanas.','CTA'],legenda:'Quando um post tenta falar de todos os serviços, nenhum deles fica claro. Dar a cada serviço a sua própria história faz o público entender o que a clínica oferece, e o post institucional passa a fazer sentido depois.',cta:'Qual serviço da sua clínica ainda não ganhou o próprio filme?',prep:'Confirme a data de estreia antes de citar. Use visual de cartaz de cinema, sem imagens oficiais protegidas.'},
+{id:'p09',d:'2026-12-21',a:2,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'O que eu diria para uma clínica que está começando o Instagram hoje',gancho:'Se uma clínica me pedisse um conselho antes de publicar o primeiro post, eu diria estas sete coisas.',porque:'Adapta a trend de "coisas que eu diria para meu eu mais jovem" ao seu nicho. Formato de lista salvável.',roteiro:['Capa com o gancho.','1. Defina para quem você fala antes de definir o que vai postar.','2. Comece pelas perguntas que já chegam na recepção.','3. Mostre quem atende. Pessoa gera mais confiança que logotipo.','4. Uma frequência que você consegue manter vale mais que uma que você abandona em um mês.','5. Data comemorativa é tempero, não é calendário.','6. Acompanhe salvamentos, compartilhamentos e perguntas, e não só curtidas.','7. Peça ajuda quando o conteúdo começar a ocupar o tempo do atendimento.','CTA'],legenda:'São conselhos que parecem simples, mas a maioria dos perfis que eu analiso tropeça em pelo menos dois deles. Se você está começando, ou recomeçando, eles servem como ponto de partida.',cta:'Qual desses conselhos chegou na hora certa para você?',prep:'Só design.'},
+{id:'p10',d:'2026-12-23',a:2,obj:'crescer',pil:'pes',fmt:'Carrossel',tema:'Os filmes de fim de ano que eu sempre reassisto e a lição de conteúdo em cada um',gancho:'Todo fim de ano eu reassisto os mesmos filmes. Desta vez fui ver o que cada um ensina sobre conteúdo.',porque:'Post leve na semana do Natal, com 20% pessoal e conexão. Mostra seus gostos sem perder o fio da estratégia.',roteiro:['Capa: você + pipoca + o gancho.','Esqueceram de Mim: Kevin planeja cada armadilha antes de os ladrões chegarem. Planejar antes do caos de janeiro.','O Grinch: odiar data comemorativa tem um fundo de razão. O calendário não pode depender delas.','Simplesmente Amor: várias histórias que se conectam no final. Assim funcionam pilares de conteúdo.','O Expresso Polar: o caminho importa tanto quanto a chegada. Conteúdo acompanha a jornada do paciente.','CTA'],legenda:'Filme de fim de ano é tradição aqui em casa, e não resisti a olhar para eles com olhar de estrategista. Troque pelos seus favoritos e veja que lição cada um traz.',cta:'Que filme ou personagem daria uma boa pauta para o seu perfil?',prep:'Foto sua real no sofá/assistindo. Troque os filmes pelos que você de fato reassiste.'},
+{id:'p11',d:'2026-12-28',a:3,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'Como montar o calendário de 2027 sem depender de datas comemorativas',gancho:'Se o calendário da sua clínica some quando não tem data comemorativa, ele não é um calendário. É uma lista de feriados.',porque:'Dúvida real do seu público e o momento exato em que as clínicas planejam o ano. Post para salvar e voltar.',roteiro:['Capa com o gancho.','Datas comemorativas entram como tempero, não como base.','Fonte de pauta 1: as dúvidas do público (o que chega por DM, telefone e recepção).','Fonte 2: os momentos da jornada (antes de marcar, no dia, depois do atendimento).','Fonte 3: os momentos da clínica (serviço novo, equipe, sazonalidade real dos atendimentos).','Exemplo de um mês montado com as três fontes.','Onde as datas entram nesse mês, quando fazem sentido.','CTA'],legenda:'Quando o calendário parte das dúvidas e da rotina da clínica, nunca falta assunto. As datas comemorativas continuam lá, mas só entram quando conversam com o que o público precisa.',cta:'Salve para consultar quando for planejar o próximo mês.',prep:'Só design, com uma tabela de mês visual.'},
+{id:'p12',d:'2026-12-30',a:3,obj:'crescer',pil:'bas',fmt:'Reel',tema:'Meu planejamento do ano, na versão real',gancho:'Esse é o meu planejamento de 2027, na versão real, sem caderno perfeito e sem mesa de revista.',porque:'Mostra seu processo e seu lifestyle, como o briefing pede, no último post do ano.',roteiro:['0–3s: plano aberto da sua mesa real + texto "meu planejamento de 2027, versão real".','Você revendo os números do ano (sem expor dados de clientes).','Você escolhendo 3 objetivos para o perfil.','Post-its/Notion com os pilares.','Um momento de pausa (café, gato, playlist).','Fecha com o calendário de janeiro pronto na tela.'],legenda:'Planejar o ano para mim é rever o que funcionou, escolher poucos objetivos e montar janeiro com calma. O resto do ano a gente ajusta mês a mês.',cta:'Você planeja o ano todo ou mês a mês?',prep:'Gravar 6 a 8 cenas curtas de 2–3s do seu processo real; trilha em alta no momento.'},
+{id:'p13',d:'2027-01-04',a:3,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'O teste das 3 perguntas para saber se uma pauta combina com o posicionamento',gancho:'Antes de aprovar uma pauta, eu faço três perguntas. Se ela não passa nas três, volta para o banco de ideias.',porque:'Primeiro post do ano útil e prático. Responde a dúvida "como saber se uma pauta está alinhada?".',roteiro:['Capa com o gancho.','Pergunta 1: fala com quem eu quero atender?','Pergunta 2: mostra algo que diferencia este trabalho?','Pergunta 3: leva a uma próxima conversa (salvar, perguntar, mandar mensagem)?','Exemplo de uma pauta que passa nas três.','Exemplo de uma que não passa, e como ajustar.','CTA'],legenda:'Nem toda ideia boa é a pauta certa para o perfil. Essas três perguntas me ajudam a decidir com mais segurança, e a guardar para depois as ideias que ainda não chegaram no momento certo.',cta:'Pense na última pauta que você publicou. Ela passaria nas três?',prep:'Só design. Ótimo candidato a virar destaque fixado.'},
+{id:'p14',d:'2027-01-06',a:3,obj:'crescer',pil:'ref',fmt:'Carrossel',tema:'Personagens de série e o tipo de perfil de clínica que cada um seria',gancho:'Se cada personagem de série cuidasse do Instagram de uma clínica, dava para reconhecer o perfil de longe.',porque:'Feito para compartilhar e marcar colegas. Mostra cada estilo de perfil com humor leve.',roteiro:['Capa com o gancho.','Dr. House: conteúdo tecnicamente impecável que ninguém entende.','Meredith Grey: só bastidor dramático, sem explicar o que a clínica faz.','Monica Geller: feed perfeito, organizado, e nenhuma conversa com o público.','Leslie Knope: calendário pronto até 2030, mas nunca revisa o que funcionou.','Ted Lasso: carisma de sobra, falta um pouco de processo.','O perfil ideal pega o melhor de cada um. E qual seria?','CTA'],legenda:'Cada estilo tem uma qualidade que vale manter e um ponto cego. A brincadeira ajuda a olhar para o próprio perfil com um pouco mais de distância.',cta:'Qual personagem é o perfil da sua clínica hoje?',prep:'Ilustrações ou cartões coloridos por personagem, sem imagens oficiais protegidas.'},
+{id:'p15',d:'2027-01-08',a:3,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'Como transformar uma dúvida comum em post sem expor pacientes',gancho:'A melhor pauta da sua clínica pode estar numa conversa com paciente. O cuidado está em como você leva isso para o post.',porque:'Pergunta frequente do seu público e muito ligada a ética. Mostra cuidado e conhecimento do setor.',roteiro:['Capa com o gancho.','O que não fazer: print de conversa, detalhe que identifica a pessoa, caso real contado com riqueza de detalhes.','Generalize: "é comum ouvir..." em vez de "uma paciente me disse...".','Junte a mesma dúvida de várias pessoas numa pergunta só.','Foque na explicação, não na história de alguém.','Cada conselho profissional tem regras de publicidade (CFM, CFP, CFO, Coren...). Vale conferir as do seu.','CTA'],legenda:'As dúvidas dos pacientes são ótima matéria-prima de conteúdo, desde que ninguém se reconheça no post. Generalizar a pergunta protege quem confiou na clínica e ainda deixa a pauta útil para mais gente.',cta:'Salve para consultar antes de transformar a próxima dúvida em post.',prep:'Só design. Não cite números de resoluções sem conferir no site do conselho.'},
+{id:'p16',d:'2027-01-11',a:3,obj:'crescer',pil:'not',fmt:'Reel',tema:'Trend aprovada ou reprovada para clínicas: edição de janeiro',gancho:'Peguei três trends do momento e decidi se uma clínica deveria ou não entrar nelas.',porque:'Sua pauta sobre adaptar trend já foi destaque. Aqui ela vira um quadro que pode se repetir todo mês.',roteiro:['0–3s: "Trend aprovada ou reprovada para clínicas?"','Trend 1 + veredito + o motivo (público, posicionamento, momento).','Trend 2 + veredito.','Trend 3 + veredito.','Fechamento: "uma trend pode combinar com a clínica e, mesmo assim, não ser a pauta desta semana".'],legenda:'Antes de entrar em qualquer trend, vale perguntar se ela conversa com o público e com o momento da clínica. Esse quadro vai voltar todo mês.',cta:'Qual trend você quer que eu avalie no próximo?',prep:'Escolha as 3 trends na semana da gravação (use o Radar). Gravação para a câmera com carimbo de aprovado/reprovado.'},
+{id:'p17',d:'2027-01-13',a:3,obj:'autoridade',pil:'est',fmt:'Carrossel',tema:'O que eu olho num relatório de conteúdo, além das curtidas',gancho:'Curtida é a métrica que mais aparece e a que menos me conta sobre um post.',porque:'Seu público quer critérios além das curtidas. Fecha o arco de planejamento mostrando como você acompanha resultados.',roteiro:['Capa com o gancho.','Salvamentos: o post foi útil a ponto de alguém querer voltar nele.','Compartilhamentos: alguém achou que outra pessoa precisava ver.','Perguntas por DM e comentários específicos: o post abriu uma conversa.','Retenção nos Reels: até onde as pessoas assistiram.','Fora do Instagram: "vi no Instagram" na recepção, perguntas na primeira consulta.','Como eu uso isso para decidir o mês seguinte.','CTA'],legenda:'Curtida mostra que alguém passou e gostou. O que me ajuda a planejar são os sinais de que o conteúdo foi útil ou começou uma conversa. Nenhuma métrica garante paciente, mas juntas elas mostram se a comunicação está indo na direção certa.',cta:'Qual métrica você olha primeiro quando abre os insights?',prep:'Só design. Pode usar telas de Insights com números fictícios marcados como exemplo.'},
+{id:'p18',d:'2027-01-15',a:4,obj:'vender',pil:'bas',fmt:'Carrossel',tema:'Do briefing ao calendário: como eu monto o planejamento de um perfil de saúde',gancho:'Quando uma clínica começa comigo, o primeiro passo não é criar post.',porque:'Abre o arco de vendas mostrando seu método passo a passo. Funciona como prova de processo.',roteiro:['Capa com o gancho.','1. Briefing: entender o negócio, a equipe e as prioridades.','2. Público: quem decide, o que pergunta, em que momento está.','3. Pilares: os assuntos que sustentam o perfil.','4. Calendário: a ordem dos temas e o objetivo de cada um.','5. Copy e roteiros.','6. Aprovação com a clínica.','7. Acompanhamento e ajuste mensal.','CTA'],legenda:'Cada etapa existe para que o post publicado faça sentido para a clínica e para quem segue. É um processo que pede participação, e é isso que deixa o conteúdo com a cara de quem atende.',cta:'Qual dessas etapas mais falta hoje no perfil da sua clínica?',prep:'Design em formato de linha do tempo.'},
+{id:'p19',d:'2027-01-18',a:4,obj:'crescer',pil:'bas',fmt:'Carrossel',tema:'Projeto conceitual: um mês de conteúdo para uma clínica de fisioterapia fictícia',gancho:'Criei uma clínica de fisioterapia que não existe só para mostrar como eu planejaria o mês dela.',porque:'Projeto conceitual, como o briefing sugere: mostra seu raciocínio sem fingir que é cliente real.',roteiro:['Capa com o aviso "projeto conceitual, clínica fictícia".','Quem é a clínica: bairro, equipe, público, objetivo do mês.','Semana 1: apresentar a equipe e como é a primeira sessão.','Semana 2: dúvidas comuns antes de começar.','Semana 3: bastidores e cuidados da equipe.','Semana 4: convite para avaliação, sem promessa de resultado.','O raciocínio por trás da ordem.','CTA'],legenda:'Este é um projeto conceitual. A clínica não existe, mas o raciocínio é o mesmo que eu uso no dia a dia. Projetos assim me ajudam a mostrar possibilidades de conteúdo para especialidades diferentes.',cta:'Que especialidade você quer ver no próximo projeto conceitual?',prep:'Crie um nome e uma identidade visual simples para a clínica fictícia.'},
+{id:'p20',d:'2027-01-20',a:4,obj:'autoridade',pil:'pes',fmt:'Reel',tema:'Um dia de trabalho de uma estrategista de conteúdo que estuda Enfermagem',gancho:'Um dia normal aqui: aula de manhã, calendário editorial à tarde.',porque:'Lifestyle e processo juntos. Humaniza antes dos posts de venda.',roteiro:['0–3s: corte rápido entre jaleco e notebook + gancho na tela.','Manhã: faculdade/estágio (sem expor pacientes ou o local).','Almoço rápido + ouvindo podcast de marketing.','Tarde: briefing, pesquisa de pauta, escrita de roteiro.','Revisão de um calendário.','Fim do dia: o que ficou para amanhã.'],legenda:'A rotina é corrida, e cada parte dela alimenta a outra. A faculdade me lembra todos os dias de quem está do outro lado da comunicação de uma clínica.',cta:'Como é um dia normal na sua rotina?',prep:'Gravar cenas reais ao longo de um dia; sem filmar pacientes ou áreas restritas.'},
+{id:'p21',d:'2027-01-22',a:4,obj:'vender',pil:'est',fmt:'Carrossel',tema:'Sinais de que sua clínica precisa de estratégia, e não de mais posts',gancho:'Publicar mais nem sempre resolve. Às vezes o que está faltando é a direção.',porque:'Fundo de funil. Os sinais vêm direto das situações do seu público-alvo, para a pessoa se reconhecer.',roteiro:['Capa com o gancho.','Vocês publicam quando sobra tempo, e cada post parece começar do zero.','O perfil fala dos serviços, mas não mostra o que diferencia o trabalho.','A equipe tem ideias, mas falta processo para virarem conteúdo.','Já contrataram produção de posts e sentiram falta de planejamento.','A clínica vai entrar numa fase nova e não sabe como comunicar.','Se você se reconheceu em dois ou mais, o que muda com estratégia.','CTA de conversa'],legenda:'Mais volume não resolve falta de direção. Uma estratégia organiza o que publicar, por que e em que ordem, e ajuda a equipe a manter a consistência. Se você se reconheceu, posso te ajudar a montar isso.',cta:'Se você se reconheceu em dois ou mais sinais, me manda PLANEJAR na DM que eu te explico como funciona.',prep:'Só design. Prepare uma resposta pronta para a palavra PLANEJAR na DM.'},
+{id:'p22',d:'2027-01-25',a:4,obj:'vender',pil:'pes',fmt:'Carrossel',tema:'O que eu preciso de você para o conteúdo da sua clínica funcionar',gancho:'Estratégia de conteúdo não é algo que eu faço sozinha e te entrego pronto. Funciona melhor a quatro mãos.',porque:'Filtra os clientes certos (quem participa) e afasta quem quer só volume. Está no seu público-alvo.',roteiro:['Capa com o gancho.','Informação: contar sobre o negócio, as prioridades e o que muda na clínica.','Tempo para aprovar, mesmo que seja pouco.','Presença: aparecer nos conteúdos, nem que seja de vez em quando.','Abertura para testar e ajustar.','O que você recebe de volta: clareza, calendário e acompanhamento.','CTA'],legenda:'Os melhores resultados que vejo vêm de clínicas que participam do processo. Não precisa ser muito tempo, só precisa ser constante. Prefiro deixar isso claro desde o começo.',cta:'Qual dessas partes seria mais difícil para a sua clínica hoje?',prep:'Só design. Tom honesto, sem soar como lista de exigências.'},
+{id:'p23',d:'2027-01-27',a:4,obj:'autoridade',pil:'ref',fmt:'Carrossel',tema:'O Chapéu Seletor e a escolha dos pilares de conteúdo',gancho:'O Chapéu Seletor não escolhe a casa pela aparência do aluno. Os pilares da sua clínica também não deveriam sair do que está na moda.',porque:'Continuação do seu post de maior destaque (Harry Potter). Usa um universo que já funcionou com seu público.',roteiro:['Capa com o gancho e referência à "parte 2".','O Chapéu olha para valores e escolhas, não para a aparência.','Pilar é isso: os assuntos que mostram o que a clínica valoriza.','Exemplo de 4 pilares para uma clínica conceitual.','Como "sortear" uma ideia para um pilar.','Quando uma ideia não cabe em nenhuma casa.','CTA'],legenda:'Os pilares ajudam a decidir para onde vai cada ideia e a manter o perfil coerente ao longo dos meses. É a segunda vez que Hogwarts me ajuda a explicar conteúdo, e provavelmente não vai ser a última.',cta:'Se os pilares da sua clínica fossem casas de Hogwarts, quais seriam?',prep:'Visual inspirado no universo, sem imagens oficiais protegidas.'},
+{id:'p24',d:'2027-01-29',a:4,obj:'vender',pil:'bas',fmt:'Carrossel',tema:'Como funciona trabalhar comigo',gancho:'Várias pessoas me perguntaram como funciona meu trabalho. Juntei tudo aqui.',porque:'Fecha o bimestre com a oferta clara, depois de quatro semanas de autoridade e de processo mostrado.',roteiro:['Capa com o gancho.','Para quem é: profissionais e clínicas de saúde que já atendem e querem direção.','Serviços: gestão de redes, estratégia, calendário editorial, copy e roteiros.','Como começa: conversa e briefing.','O que você recebe a cada mês.','O que eu não prometo: viralização ou agenda cheia. O que eu entrego: estratégia, processo e acompanhamento.','Como falar comigo.'],legenda:'Se você chegou até aqui acompanhando os posts, já conhece um pouco do jeito que eu penso. Este é o resumo de como esse raciocínio vira trabalho com a sua clínica.',cta:'Me manda PLANEJAR na DM para conversarmos sobre o momento da sua clínica.',prep:'Fixar no perfil depois de publicar. Use "várias pessoas me perguntaram" só se for verdade; senão troque o gancho.'}
+];
+
+const BANCO=[
+{tema:'O que personagens de filmes ensinam sobre posicionamento',gancho:'Miranda Priestly nunca explica o que a revista dela é. Todo mundo já sabe. Isso é posicionamento.',fmt:'Carrossel',pil:'ref',obj:'autoridade'},
+{tema:'Como incluir hobbies no perfil profissional sem parecer que mudou de assunto',gancho:'Eu falo de filmes aqui quase toda semana, e o perfil nunca deixou de ser sobre conteúdo para saúde.',fmt:'Carrossel',pil:'pes',obj:'autoridade'},
+{tema:'Como levar uma notícia de marketing para uma conversa útil com profissionais de saúde',gancho:'Nem toda notícia sobre o Instagram vale um post. Eu uso três filtros antes de decidir.',fmt:'Carrossel',pil:'not',obj:'autoridade'},
+{tema:'O que muda quando olho para uma ideia com estratégia',gancho:'A ideia era "post de dia das mães". Olha o que ela virou depois de três perguntas.',fmt:'Carrossel',pil:'est',obj:'autoridade'},
+{tema:'Como usar referências culturais sem depender de piada interna',gancho:'Se a pessoa precisa ter visto o filme para entender o post, a referência está fazendo o trabalho errado.',fmt:'Carrossel',pil:'ref',obj:'autoridade'},
+{tema:'Pautas para cada momento da experiência do paciente',gancho:'Antes de marcar, no dia da consulta e depois dela, o paciente tem dúvidas diferentes. O conteúdo pode acompanhar cada uma.',fmt:'Carrossel',pil:'est',obj:'autoridade'},
+{tema:'Corta pra eu: a rotina de conteúdo da clínica',gancho:'"Esse mês a gente vai planejar com antecedência." Corta pra eu fazendo o post de segunda no domingo à noite.',fmt:'Carrossel',pil:'pes',obj:'crescer'},
+{tema:'Até onde compartilhar uma opinião pessoal no perfil da clínica',gancho:'Opinião aproxima, mas tem assunto que divide o público sem ajudar a clínica. Como eu decido onde fica a linha.',fmt:'Carrossel',pil:'pes',obj:'autoridade'},
+{tema:'Como explicar um tema técnico com clareza e contexto',gancho:'O termo técnico está certo, mas o paciente parou de ler no segundo slide.',fmt:'Carrossel',pil:'est',obj:'autoridade'},
+{tema:'Reescrevendo uma legenda genérica ao vivo',gancho:'Peguei uma legenda que poderia ser de qualquer clínica e reescrevi até ela ficar com a cara de uma só.',fmt:'Reel',pil:'bas',obj:'autoridade'},
+{tema:'BBB e a edição: o que a clínica mostra e o que fica de fora',gancho:'O BBB tem 24 horas de câmera e mostra uma hora por dia. O perfil da sua clínica também é uma edição.',fmt:'Carrossel',pil:'ref',obj:'crescer',obs:'O BBB costuma estrear em janeiro; confira a data.'},
+{tema:'Carnaval: a clínica precisa postar?',gancho:'Fantasia com o logo da clínica não é a única opção para o Carnaval.',fmt:'Reel',pil:'not',obj:'crescer',obs:'Carnaval 2027: semana de 8 de fevereiro.'},
+{tema:'MasterChef e a diferença entre receita e técnica',gancho:'No MasterChef, quem decora receita sofre na prova surpresa. Quem entende técnica improvisa. Com conteúdo é igual.',fmt:'Carrossel',pil:'ref',obj:'autoridade'},
+{tema:'Toy Story e o perfil que tem medo de ser substituído pela trend nova',gancho:'O Woody passou o filme todo com medo do Buzz. Tem clínica que sente o mesmo a cada trend nova.',fmt:'Carrossel',pil:'ref',obj:'crescer'},
+{tema:'Erros de briefing que eu já cometi',gancho:'O primeiro briefing que eu fiz tinha 40 perguntas. A cliente respondeu três.',fmt:'Carrossel',pil:'bas',obj:'autoridade'},
+{tema:'A pergunta que eu faço em toda primeira reunião com uma clínica',gancho:'Antes de falar de Instagram, eu pergunto uma coisa que quase nunca tem a ver com Instagram.',fmt:'Reel',pil:'bas',obj:'vender'},
+{tema:'Feed bonito × feed que conversa',gancho:'O feed estava lindo, e mesmo assim ninguém perguntava nada.',fmt:'Carrossel',pil:'est',obj:'crescer'},
+{tema:'Como saber se uma notícia vale um post',gancho:'Saiu uma notícia sobre redes sociais. Antes de postar, eu me pergunto se ela muda alguma coisa na rotina de quem me segue.',fmt:'Reel',pil:'not',obj:'autoridade'},
+{tema:'O que a Ansiedade de Divertida Mente 2 faria com 47 ideias',gancho:'Se a Ansiedade montasse o calendário da sua clínica, ele teria 47 ideias para esta semana e nenhuma estratégia.',fmt:'Reel',pil:'ref',obj:'crescer'},
+{tema:'Posts que nutricionistas costumam fazer e outros que poderiam explorar',gancho:'Prato colorido e receita fit todo mundo já viu. Esses outros posts quase ninguém faz.',fmt:'Carrossel',pil:'est',obj:'crescer',obs:'Repete o formato do seu destaque com psicólogos, para outra especialidade.'}
+];
+
+const FORMATOS=[
+{n:'Referência cultural → ideia estratégica',obj:'crescer',e:'Médio',q:'Quando quer alcance e compartilhamento sem perder profundidade. É a sua marca registrada.',s:'Capa com a cena ou o personagem → 3 a 5 slides desenvolvendo a analogia → o ponto estratégico claro → exemplo prático para clínica → CTA ligado à referência.',x:'Harry Potter e as perguntas do público ao longo da jornada.'},
+{n:'Isso × aquilo',obj:'autoridade',e:'Baixo',q:'Para mostrar critério: dois caminhos e quando usar cada um.',s:'Capa com a comparação → um slide para cada lado → quando cada um faz sentido → como equilibrar → CTA.',x:'Conteúdo que a clínica precisa fazer × conteúdo que gostaria de fazer.'},
+{n:'Parece óbvio, mas…',obj:'autoridade',e:'Baixo',q:'Para quebrar expectativa e mostrar o que muda na prática.',s:'Capa "Algumas coisas parecem óbvias até…" → 4 a 6 afirmações óbvias, cada uma com a virada prática → CTA.',x:'Coisas que parecem óbvias sobre conteúdo.'},
+{n:'Uma dúvida, uma sequência',obj:'autoridade',e:'Médio',q:'Para mostrar método e gerar salvamentos.',s:'A pergunta → o momento da jornada que ela revela → 4 posts derivados → o raciocínio → CTA.',x:'Como transformar dúvidas da clínica em sequência de conteúdos.'},
+{n:'Posts que todo mundo faz e outros que poderiam fazer',obj:'crescer',e:'Baixo',q:'Para uma especialidade específica. Atrai aquele público e é muito compartilhado.',s:'Capa com a especialidade → 3 posts comuns (sem crítica) → 4 a 5 alternativas com exemplo → CTA.',x:'Posts que psicólogos costumam fazer (seu destaque no LinkedIn).'},
+{n:'Lista salvável',obj:'autoridade',e:'Baixo',q:'Checklists, testes e passos para consultar depois.',s:'Capa com a promessa concreta → um item por slide com exemplo → slide-resumo → CTA de salvar.',x:'O teste das 3 perguntas para uma pauta.'},
+{n:'Notícia comentada (Reel)',obj:'crescer',e:'Médio',q:'Quando sai uma mudança de plataforma ou notícia do setor. Confira a fonte antes.',s:'0–3s: a notícia em uma frase → contexto → o que muda para clínicas → o que não muda → CTA.',x:'Ferramenta do Instagram para identificar cópias e a discussão sobre autoria.'},
+{n:'Aprovada ou reprovada',obj:'crescer',e:'Médio',q:'Quadro mensal avaliando trends para clínicas.',s:'0–3s: título do quadro → trend + veredito + motivo (x3) → frase de fechamento → CTA pedindo a próxima trend.',x:'Trend aprovada ou reprovada para clínicas.'},
+{n:'Projeto conceitual',obj:'vender',e:'Alto',q:'Para mostrar raciocínio e possibilidades sem citar cliente real.',s:'Aviso "conceitual" → quem é a clínica fictícia → diagnóstico → plano semana a semana → raciocínio → CTA.',x:'Um mês para uma clínica de fisioterapia fictícia.'},
+{n:'Bastidor do processo',obj:'vender',e:'Médio',q:'Para mostrar como você trabalha antes de vender.',s:'Gancho "o primeiro passo não é criar post" → etapas numeradas → o que a clínica recebe → CTA de conversa.',x:'Do briefing ao calendário.'},
+{n:'Corta pra eu (meme)',obj:'crescer',e:'Baixo',q:'Identificação e humor leve sobre a rotina de conteúdo. Você tem o design system "Corta Pra Eu" pronto.',s:'Título-adesivo repetido → 5 cenas "corta pra eu" com confissões reconhecíveis → legenda que puxa a lição.',x:'"Esse mês vamos planejar com antecedência." Corta pra eu fazendo o post no domingo à noite.'},
+{n:'Slideshow em Reel',obj:'crescer',e:'Baixo',q:'Transformar um carrossel que foi bem em Reel, para alcançar quem não segue.',s:'Os mesmos slides em sequência, 2 a 3s cada, com áudio em alta e texto grande.',x:'Reaproveitar seu carrossel de Harry Potter em formato de vídeo.'},
+{n:'Erros que eu cometi',obj:'autoridade',e:'Baixo',q:'Gera confiança e identificação. Vulnerabilidade com raciocínio.',s:'Gancho com o erro → contexto → o que aprendi → o que faço hoje → CTA.',x:'Meus posts que não funcionaram este ano.'},
+{n:'Sinais de que…',obj:'vender',e:'Baixo',q:'Fundo de funil: a pessoa se reconhece nas situações.',s:'Gancho com a dor → 4 a 6 sinais tirados do público-alvo → o que muda com estratégia → CTA de DM.',x:'Sinais de que sua clínica precisa de estratégia.'}
+];
+
+const GANCHOS=[
+{t:'Pergunta',f:['Como saber se [tema] combina com [perfil/clínica]?','Quais perguntas aparecem antes de alguém [ação do paciente]?','O que acontece quando [situação comum] na rotina da clínica?']},
+{t:'Comparação',f:['[Coisa A] e [coisa B]: como encontrar o meio-termo?','Posts que muitos [especialidade] fazem e outros que também poderiam fazer.','O mesmo tema, duas legendas. Olha a diferença.']},
+{t:'Quebra de expectativa',f:['Algumas coisas parecem óbvias sobre [tema] até você entender o que muda na prática.','Uma [trend/data] pode combinar com a clínica e, mesmo assim, não ser a pauta certa para esta semana.','O primeiro passo de [processo] não é [o que todo mundo acha].']},
+{t:'Narrativa cultural',f:['[Personagem] [ação marcante]. O conteúdo da sua clínica também pode [paralelo].','Se [personagem] montasse o calendário da sua clínica, [consequência engraçada].','O que [filme/série] ensina sobre [conceito de conteúdo].']},
+{t:'Notícia',f:['O Instagram [novidade]. O que isso faz a gente pensar sobre [tema]?','Saiu [notícia]. Antes de postar sobre ela, vale fazer uma pergunta.']},
+{t:'Bastidor',f:['Esse é o meu [processo], na versão real.','O que eu faço antes de [entrega].','Um erro que eu cometi com [tema] e o que mudei depois dele.']}
+];
+
+const TRENDS={data:'26 de novembro de 2026',itens:[
+{t:'Carrossel continua forte em salvamentos e compartilhamentos',tag:'Formato',o:'Vários blogs de marketing de novembro apontam carrosséis à frente de vídeos em salvamentos e compartilhamentos, mas as fontes se contradizem sobre o mix ideal. Para você, isso confirma o carrossel como formato principal e o Reel como formato de alcance.',use:'Mantenha o plano: carrossel na maior parte dos posts, Reel para notícia, trend e bastidor.',src:[['SocialBee: tendências do Instagram','https://socialbee.com/blog/latest-instagram-trends/'],['Carousel styles 2026','https://carouselpost.io/digest/trending-carousel-styles-2026']]},
+{t:'Legenda diferente por slide do carrossel (em teste)',tag:'Novidade',o:'Relatos de que o Instagram testa legenda por slide e criação de carrossel dentro do app Edits. Ainda não está confirmado para todo mundo.',use:'Se aparecer na sua conta, teste no post de 4 de dezembro (cada slide com a explicação do post derivado).',src:[['SocialBee: novidades do Instagram','https://socialbee.com/blog/instagram-updates-news-features/'],['Giovanni Perilli: o que é real e o que não é','https://giovanniperilli.com/en/blog/new-instagram-features-november-2026/']]},
+{t:'Originalidade: contas que só repostam perdem recomendação',tag:'Notícia',o:'Um dos blogs afirma que, desde abril de 2026, contas que publicam principalmente conteúdo de outras pessoas deixam de aparecer nas recomendações. Não encontrei o comunicado oficial; confira antes de usar.',use:'Pauta natural para você, que já teve destaque falando de autoria. Também reforça o argumento contra conteúdo genérico de banco.',src:[['SocialBee: tendências do Instagram','https://socialbee.com/blog/latest-instagram-trends/']]},
+{t:'Primeiro dia com mais peso no alcance (não confirmado)',tag:'Algoritmo',o:'Um dos resultados cita que o primeiro dia depois da publicação passou a pesar mais. Não há detalhe oficial.',use:'Publique no horário em que seu público está online e responda os comentários nas primeiras horas.',src:[['Giovanni Perilli: o que é real e o que não é','https://giovanniperilli.com/en/blog/new-instagram-features-november-2026/']]},
+{t:'"Coisas que eu diria para meu eu mais jovem"',tag:'Trend de carrossel',o:'Carrossel reflexivo com conselhos que a pessoa gostaria de ter ouvido antes.',use:'Adaptado no post de 21/12: o que eu diria para uma clínica que está começando o Instagram.',src:[['SocialBee: tendências do Instagram','https://socialbee.com/blog/latest-instagram-trends/']]},
+{t:'"Meus últimos flops"',tag:'Trend de Reel',o:'Criadores mostram posts que não funcionaram e o que aprenderam.',use:'Adaptado no Reel de 16/12.',src:[['PostEverywhere: tendências 2026','https://posteverywhere.ai/blog/instagram-trends-2026']]},
+{t:'Slideshow em Reel',tag:'Formato',o:'Fotos ou slides em sequência dentro de um Reel, com transição e música, imitando um carrossel.',use:'Reaproveite seus carrosséis de maior destaque como Reel para alcançar quem não te segue.',src:[['SocialBee: tendências do Instagram','https://socialbee.com/blog/latest-instagram-trends/']]},
+{t:'Estreias de dezembro: Duna: Parte Três e Vingadores: Doomsday',tag:'Cultura',o:'As agendas indicam os dois filmes para a segunda quinzena de dezembro. As datas variam entre fontes e países; confirme a data no Brasil.',use:'Vingadores entrou no post de 18/12. Duna pode render uma pauta sobre "quem entende o público controla a conversa".',src:[['AdoroCinema: agenda de dezembro de 2026','https://www.adorocinema.com/filmes/agenda/mes/mes-2026-12/'],['Sortiraparis: estreias do inverno','https://www.sortiraparis.com/pt/o-que-fazer-em-paris/cinema-serie/guides/339060-os-filmes-mais-aguardados-no-cinema-neste-inverno-de-2026-a-2027']]},
+{t:'Temporada de retrospectivas e planejamento',tag:'Sazonal',o:'Dezembro concentra retrospectivas (como a do Spotify) e janeiro, o planejamento do ano. São os momentos em que as clínicas mais pensam em comunicação.',use:'Base dos arcos 2 e 3, e o motivo de a oferta entrar no fim de janeiro.',src:[]}
+]};
+
+const BRAND=`Você escreve para a Anna, social media e estrategista de conteúdo para profissionais e clínicas de saúde que já atuam no mercado (gestão de redes, estratégia, calendário editorial, copy e roteiros). Ela está quase formada em Enfermagem, o que aparece como perspectiva sobre o setor, nunca como orientação clínica. Canal: Instagram, 3 posts por semana, principalmente carrosséis e alguns Reels. Objetivos: crescer, ganhar autoridade e vender, sem prometer resultados.
+Público: profissionais e sócios/gestores de clínicas de saúde com serviço ativo, de qualquer especialidade, que publicam quando sobra tempo, não deixam claro o diferencial, têm ideias mas falta processo, já contrataram posts e sentiram falta de planejamento, ou precisam comunicar uma nova fase. Querem clareza sobre o que publicar e por quê, consistência e critérios além das curtidas. Não é foco: quem quer só feed bonito, volume barato ou garantia de viralização.
+Pilares: Estratégia na prática; Referências culturais; Pessoal com propósito (cerca de 20%); Notícias e trends; Bastidores e projetos conceituais (sempre identificados como conceituais).
+O que mais funciona para ela: uma ideia estratégica junto com uma referência concreta (filme, personagem, situação cotidiana). Ex.: Harry Potter e as perguntas do público ao longo da jornada; conteúdo que a clínica precisa fazer × que gostaria de fazer; posts que psicólogos fazem e outros que poderiam fazer.
+Tom: divertido, didático, direto e profissional. Frases completas, transições naturais, exemplos concretos, texto que soa natural lido em voz alta. Humor leve sobre a rotina de conteúdo, com respeito a pacientes e profissionais.
+Ganchos que ela usa: perguntas, comparações, quebras de expectativa, narrativas culturais, notícias. CTAs: perguntas específicas ligadas ao tema ou convite a salvar; nunca pedido genérico de comentário.
+Vocabulário: estratégia de conteúdo, calendário editorial, posicionamento, dúvidas do público, rotina da clínica, comunicação da marca, personalidade da marca, referências culturais.
+PROIBIDO: "conteúdo incrível", "estratégia infalível", "bomba no Instagram", "hack do algoritmo", "viralize sua clínica", "segredo para atrair pacientes", "transforme sua presença digital"; prometer viralização, agenda cheia ou mais pacientes; clichês e frases de efeito em excesso; a estrutura "não é sobre X, é sobre Y"; frases quebradas para fabricar impacto; legenda que repete o carrossel; inventar dados, falas, notícias, recomendações clínicas ou resultados. Se citar notícia ou dado, avise que precisa ser conferido.
+Escreva em português do Brasil.`;
+
+const REFS=['Divertida Mente 2','Harry Potter','O Diabo Veste Prada','Grey\'s Anatomy','Friends','Ted Lasso','Toy Story','Barbie','Shrek','Os Simpsons','MasterChef','Bake Off Brasil','BBB','Stranger Things','Ratatouille','Up: Altas Aventuras','Procurando Nemo','De Volta para o Futuro','O Rei Leão','Orgulho e Preconceito','The Office','Brooklyn Nine-Nine','Gilmore Girls','Wandinha','Duna','Vingadores','Esqueceram de Mim','uma receita de bolo','montar um quebra-cabeça','arrumar a mala de viagem','montar uma playlist','treino de academia','plantas que morrem','café coado','dia de chuva','fila do mercado'];
+const DUVIDAS=['Como saber se uma pauta está alinhada ao posicionamento?','Como montar um calendário sem depender de datas comemorativas?','Como falar de um hobby sem parecer que o perfil mudou de assunto?','Até onde compartilhar uma opinião pessoal?','Como adaptar um filme para o meu nicho?','Como transformar uma dúvida comum em post sem expor pacientes?','Como explicar um tema técnico com clareza?','Como saber se uma notícia vale um post?','Como falar de uma trend sem parecer cópia?','Por que publicar mais não resolve falta de direção?','Como mostrar o diferencial da clínica?','Como comunicar um serviço novo?','Como manter consistência com pouco tempo?','Como medir conteúdo além das curtidas?','Por que cada post parece começar do zero?'];
+
+const BANNED=[
+[/conte[úu]do incr[íi]vel/i,'"conteúdo incrível" está na sua lista de expressões evitadas.'],
+[/infal[íi]vel/i,'"infalível" promete o que ninguém garante.'],
+[/bomba(r|ndo)?( no)? instagram|bombar/i,'"bombar" está na sua lista de expressões evitadas.'],
+[/hack/i,'"hack" (do algoritmo) está na sua lista de expressões evitadas.'],
+[/viraliz/i,'Fala em viralizar: você evita prometer viralização.'],
+[/segredo/i,'"segredo" soa como promessa ("segredo para atrair pacientes").'],
+[/transform(e|ar) sua presen[çc]a/i,'"transforme sua presença digital" está na lista evitada.'],
+[/agenda cheia|lotar a agenda|agenda lotada/i,'Promessa de agenda cheia.'],
+[/mais pacientes|atrair pacientes|novos pacientes/i,'Pode soar como promessa de pacientes. Confira o contexto.'],
+[/garant(o|ido|ida|ia|imos)/i,'Promessa de resultado ("garantido").'],
+[/n[ãa]o [ée] sobre .{1,60}[ée] sobre/i,'Estrutura "não é sobre X, é sobre Y", que você pediu para evitar.'],
+[/comenta a[íi]|deixa (seu|o) like|comente abaixo|marque (um|uma|seus|suas) amig/i,'CTA genérico. Troque por uma pergunta específica sobre o tema.'],
+[/simples assim|spoiler:|ningu[ée]m te conta|o que ningu[ée]m fala/i,'Frase pronta/clichê.']
+];
+
+const $=s=>document.querySelector(s);
+const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const WD=['dom','seg','ter','qua','qui','sex','sáb'];
+const MES=['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+const pd=s=>{const[a,b,c]=s.split('-').map(Number);return new Date(a,b-1,c)};
+const today=new Date();today.setHours(0,0,0,0);
+const ST=['ideia','roteiro','design','agendado','publicado'];
+const STN={ideia:'Ideia',roteiro:'Roteiro pronto',design:'Em design',agendado:'Agendado',publicado:'Publicado'};
+
+const S={posts:{},ideias:{},mode:'local'};
+let db=null,sample=null;
+const LK='pauta-anna-v1';
+function loadLocal(){try{const j=JSON.parse(localStorage.getItem(LK)||'{}');S.posts=j.posts||{};S.ideias=j.ideias||{}}catch(e){}}
+function saveLocal(){try{localStorage.setItem(LK,JSON.stringify({posts:S.posts,ideias:S.ideias}))}catch(e){}}
+const queue={};
+function write(path,data){
+  if(!db){saveLocal();return}
+  queue[path]=(queue[path]||Promise.resolve()).then(()=>data===null?db.doc(path).delete():db.doc(path).set(data)).catch(e=>toast('Não consegui salvar ('+(e&&e.code||'erro')+')'));
+}
+function setPost(id,patch){S.posts[id]={...(S.posts[id]||{}),...patch};write('posts/'+id,S.posts[id]);renderTop();renderView()}
+function setIdea(id,data){if(data===null)delete S.ideias[id];else S.ideias[id]=data;write('ideias/'+id,data);renderTop();renderView()}
+const newId=()=>'i'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+function toast(m){const t=$('#toast');t.textContent=m;t.hidden=false;clearTimeout(toast.h);toast.h=setTimeout(()=>t.hidden=true,2600)}
+
+function allItems(){
+  const base=POSTS.map(p=>({...p,kind:'post',status:(S.posts[p.id]||{}).status||'ideia',d:(S.posts[p.id]||{}).data||p.d}));
+  const extra=Object.entries(S.ideias).filter(([k,v])=>v&&v.data).map(([k,v])=>({...v,id:k,kind:'ideia',d:v.data,status:v.status||'ideia',a:0}));
+  return base.concat(extra).sort((x,y)=>x.d<y.d?-1:x.d>y.d?1:0);
+}
+
+function renderTop(){
+  const items=POSTS.map(p=>({...p,status:(S.posts[p.id]||{}).status||'ideia'}));
+  const nextId=(POSTS.find(p=>pd(p.d)>=today)||{}).id;
+  $('#ribbon').innerHTML=ARCOS.map(a=>`<div class="arc"><b>${esc(a.n)}</b><div class="cells">${items.filter(p=>p.a===a.id).map(p=>{const dt=pd(p.d);return `<button class="cell${p.status==='publicado'?' done':''}${p.id===nextId?' now':''}" style="--c:${OBJ[p.obj].c}" data-open="${p.id}" title="${esc(dt.getDate()+' '+MES[dt.getMonth()]+': '+p.tema)}" aria-label="${esc(dt.getDate()+' de '+MES[dt.getMonth()]+', '+p.tema)}"><span>${dt.getDate()}</span></button>`}).join('')}</div></div>`).join('');
+  const pub=items.filter(p=>p.status==='publicado').length;
+  const prontos=items.filter(p=>['roteiro','design','agendado'].includes(p.status)).length;
+  const nIdeias=Object.keys(S.ideias).length;
+  $('#stats').innerHTML=`<div><strong>${pub}/${items.length}</strong>publicados</div><div><strong>${prontos}</strong>em produção</div><div><strong>${BANCO.length+nIdeias}</strong>ideias no banco</div>`;
+}
+
+const VIEWS=[['semana','Semana'],['calendario','Calendário'],['ideias','Banco de ideias'],['gerar','Gerar ideias'],['formatos','Formatos e ganchos'],['trends','Radar de trends'],['revisar','Revisar texto'],['metricas','Métricas'],['marca','Minha marca']];
+let cur='semana';
+function route(){const h=location.hash.slice(1);cur=VIEWS.some(v=>v[0]===h)?h:'semana';$('#nav').innerHTML=VIEWS.map(([k,n])=>`<a href="#${k}" class="${k===cur?'on':''}">${n}</a>`).join('');renderView();const a=$('#nav a.on');if(a&&a.scrollIntoView)a.scrollIntoView({block:'nearest',inline:'center'})}
+
+function chips(p){return `<div class="chips"><span class="chip o" style="--c:${OBJ[p.obj]?.c||'var(--rosa)'}">${esc(OBJ[p.obj]?.n||p.obj)}</span><span class="chip">${esc(p.fmt)}</span><span class="chip">${esc(PIL[p.pil]||p.pil||'')}</span></div>`}
+function dlabel(s){const d=pd(s);return `${WD[d.getDay()]}, ${d.getDate()} de ${MES[d.getMonth()]}`}
+
+function vSemana(){
+  const it=allItems();
+  let up=it.filter(p=>pd(p.d)>=today&&p.status!=='publicado').slice(0,3);
+  if(!up.length)up=it.filter(p=>p.status!=='publicado').slice(0,3);
+  const first=up[0];
+  const arco=first&&ARCOS.find(a=>a.id===first.a);
+  const pend=it.filter(p=>pd(p.d)<today&&p.status!=='publicado');
+  return `<div class="head"><div><h2>Próximos posts</h2><p>${arco?`Arco ${arco.id}: <b>${esc(arco.n)}</b>. ${esc(arco.o)}`:'Os três próximos posts do calendário.'}</p></div><a class="btn ghost" href="#calendario">Ver calendário completo</a></div>
+  ${up.length?`<div class="grid3">${up.map(p=>{const d=pd(p.d);return `<button class="card post" data-open="${p.id}"><span class="date">${WD[d.getDay()]} · ${MES[d.getMonth()]}</span><span class="big">${d.getDate()}</span>${chips(p)}<h3>${esc(p.tema)}</h3><p class="gancho">“${esc(p.gancho)}”</p><span class="st ${p.status==='publicado'?'pub':''}">${STN[p.status]}</span></button>`}).join('')}</div>`:`<div class="empty">Tudo publicado. Hora de gerar o próximo bimestre.</div>`}
+  ${pend.length?`<div class="weekh"><h3>Ficaram para trás</h3><span>${pend.length} post(s) com data passada e sem marcar como publicado</span></div><div class="list">${pend.map(li).join('')}</div>`:''}
+  <div class="weekh"><h3>Rotina da semana</h3><span>um jeito simples de não começar do zero</span></div>
+  <div class="grid3">
+   <div class="card"><h3>Segunda</h3><p class="note">Revise o Radar de trends e confira as notícias que vai citar. Marque o post da semana anterior com as métricas.</p></div>
+   <div class="card"><h3>Quarta</h3><p class="note">Escreva os roteiros da semana seguinte (use "Escrever com Claude" no post) e passe tudo pelo "Revisar texto".</p></div>
+   <div class="card"><h3>Sexta</h3><p class="note">Design e agendamento. Guarde no Banco de ideias tudo o que surgiu durante a semana.</p></div>
+  </div>`;
+}
+function li(p){const d=pd(p.d);return `<button class="li" data-open="${p.id}"><span class="dd">${d.getDate()}<small>${WD[d.getDay()]} · ${MES[d.getMonth()]}</small></span><span><h4>${esc(p.tema)}</h4>${chips(p)}</span><span class="st ${p.status==='publicado'?'pub':''}">${STN[p.status]||p.status}</span></button>`}
+
+let fObj='todos',fFmt='todos';
+function vCal(){
+  const it=allItems().filter(p=>(fObj==='todos'||p.obj===fObj)&&(fFmt==='todos'||p.fmt===fFmt));
+  const cnt={crescer:0,autoridade:0,vender:0};POSTS.forEach(p=>cnt[p.obj]++);
+  const groups=ARCOS.map(a=>({h:`Arco ${a.id}: ${a.n}`,s:`${a.q} · ${a.o}`,l:it.filter(p=>p.a===a.id)}));
+  const ex=it.filter(p=>p.kind==='ideia');if(ex.length)groups.push({h:'Ideias que você agendou',s:'vindas do banco ou do gerador',l:ex});
+  return `<div class="head"><div><h2>Calendário de dezembro e janeiro</h2><p>Segunda, quarta e sexta. Natal e Ano-Novo ficaram livres (só stories). Mix do bimestre: ${cnt.crescer} para crescer, ${cnt.autoridade} de autoridade e ${cnt.vender} de venda, com a venda concentrada no fim de janeiro, depois de semanas construindo confiança.</p></div>
+  <div class="filters"><select id="fObj" aria-label="Filtrar por objetivo"><option value="todos">Todos os objetivos</option>${Object.entries(OBJ).map(([k,v])=>`<option value="${k}" ${fObj===k?'selected':''}>${v.n}</option>`).join('')}</select><select id="fFmt" aria-label="Filtrar por formato"><option value="todos">Todos os formatos</option><option ${fFmt==='Carrossel'?'selected':''}>Carrossel</option><option ${fFmt==='Reel'?'selected':''}>Reel</option></select></div></div>
+  ${groups.map(g=>g.l.length?`<div class="weekh"><h3>${esc(g.h)}</h3><span>${esc(g.s)}</span></div><div class="list">${g.l.map(li).join('')}</div>`:'').join('')||'<div class="empty">Nenhum post com esses filtros.</div>'}`;
+}
+
+let fBanco='todos';
+function vIdeias(){
+  const saved=Object.entries(S.ideias).map(([k,v])=>({...v,id:k}));
+  const b=BANCO.filter(x=>fBanco==='todos'||x.pil===fBanco);
+  return `<div class="head"><div><h2>Banco de ideias</h2><p>Temas prontos fora do calendário, para trocar um post, preencher uma semana ou começar o próximo bimestre. As ideias que você salvar ou gerar com o Claude aparecem primeiro.</p></div><button class="btn" id="addIdea">Nova ideia</button></div>
+  <div id="ideaForm" hidden class="card" style="margin-bottom:16px"><div class="grid2"><label>Tema<input type="text" id="niTema"></label><label>Gancho<input type="text" id="niGancho"></label><label>Formato<select id="niFmt"><option>Carrossel</option><option>Reel</option></select></label><label>Objetivo<select id="niObj">${Object.entries(OBJ).map(([k,v])=>`<option value="${k}">${v.n}</option>`).join('')}</select></label></div><div class="row" style="margin-top:12px"><button class="btn" id="niSave">Salvar ideia</button><button class="btn ghost" id="niCancel">Cancelar</button></div></div>
+  ${saved.length?`<div class="weekh"><h3>Suas ideias</h3><span>${saved.length} salva(s)</span></div><div class="grid3">${saved.map(x=>ideaCard(x,true)).join('')}</div>`:''}
+  <div class="weekh"><h3>Ideias prontas</h3><span><select id="fBanco" aria-label="Filtrar por pilar"><option value="todos">Todos os pilares</option>${Object.entries(PIL).map(([k,v])=>`<option value="${k}" ${fBanco===k?'selected':''}>${v}</option>`).join('')}</select></span></div>
+  <div class="grid3">${b.map((x)=>ideaCard({...x,bi:BANCO.indexOf(x)},false)).join('')}</div>`;
+}
+function ideaCard(x,mine){
+  return `<div class="card post" style="cursor:default">${chips(x)}<h3>${esc(x.tema)}</h3><p class="gancho">“${esc(x.gancho)}”</p>${x.obs?`<p class="note">${esc(x.obs)}</p>`:''}${x.data?`<span class="st">Agendada para ${esc(dlabel(x.data))}</span>`:''}
+  <div class="row">${mine?`<button class="btn sm ghost" data-open="${x.id}">Abrir</button><button class="btn sm ghost" data-del="${x.id}">Apagar</button>`:`<button class="btn sm ghost" data-keep="${x.bi}">Salvar e agendar</button>`}</div></div>`;
+}
+
+let genOpts={obj:'qualquer',pil:'qualquer',fmt:'qualquer'},genOut=[],genBusy=false,genCtl=null,combo=null;
+function seg(id,cur,opts){return `<div class="seg" data-seg="${id}">${opts.map(([k,n])=>`<button class="${cur===k?'on':''}" data-v="${k}">${n}</button>`).join('')}</div>`}
+function vGerar(){
+  return `<div class="head"><div><h2>Gerar ideias</h2><p>Escolha o que você precisa e o Claude cria ideias completas com tema, objetivo, gancho, roteiro, legenda e CTA, seguindo o seu dossiê. Sem IA, o combinador mistura uma referência com uma dúvida do seu público.</p></div></div>
+  <div class="grid2">
+  <div class="card"><h3 style="margin-bottom:12px">Com o Claude</h3>
+   <label style="margin-bottom:12px">Objetivo${seg('obj',genOpts.obj,[['qualquer','Tanto faz'],['crescer','Crescer'],['autoridade','Autoridade'],['vender','Vender']])}</label>
+   <label style="margin-bottom:12px">Pilar${seg('pil',genOpts.pil,[['qualquer','Tanto faz'],...Object.entries(PIL)])}</label>
+   <label style="margin-bottom:12px">Formato${seg('fmt',genOpts.fmt,[['qualquer','Tanto faz'],['Carrossel','Carrossel'],['Reel','Reel']])}</label>
+   <label style="margin-bottom:14px">Ponto de partida (opcional)<input type="text" id="genSeed" placeholder="um filme, uma notícia, uma dúvida que chegou, um hobby" value="${esc(genOpts.seed||'')}"></label>
+   <div class="row"><button class="btn" id="genGo" ${genBusy?'disabled':''}>${genBusy?'Pensando…':'Gerar 3 ideias'}</button>${genBusy?'<button class="btn ghost" id="genStop">Parar</button>':''}</div>
+   <p class="note" id="genMsg" style="margin-top:10px">${sample?'Cada geração usa o seu plano do Claude.':'O gerador com IA funciona quando esta página está aberta no Claude. O combinador ao lado funciona sempre.'}</p>
+  </div>
+  <div class="card"><h3 style="margin-bottom:12px">Combinador</h3>
+   ${combo?`<p><b>Referência:</b> ${esc(combo.r)}</p><p><b>Dúvida do público:</b> ${esc(combo.d)}</p><p><b>Formato:</b> ${esc(combo.f.n)}</p><p class="note">${esc(combo.f.s)}</p><p class="box">Gancho de partida: “O que ${esc(combo.r)} tem a ver com esta pergunta: ${esc(combo.d.toLowerCase())}”</p>`:'<p class="note">Clique para sortear uma combinação. Às vezes sai algo improvável, e é justamente daí que costumam vir as melhores ideias.</p>'}
+   <div class="row" style="margin-top:12px"><button class="btn ghost" id="comboGo">Sortear combinação</button>${combo?`<button class="btn ghost" id="comboAI" ${sample?'':'disabled'}>Desenvolver com Claude</button><button class="btn ghost" id="comboSave">Salvar no banco</button>`:''}</div>
+  </div></div>
+  <div id="genRes">${genOut.map((x,i)=>genCard(x,i)).join('')}</div>`;
+}
+function genCard(x,i){
+  return `<div class="card" style="margin-top:16px">${chips(x)}<h3 style="margin:10px 0 6px">${esc(x.tema)}</h3><p class="gancho">“${esc(x.gancho)}”</p><p class="note">${esc(x.porque)}</p>
+  <details><summary>Roteiro, legenda e CTA</summary><ol class="slides">${(x.roteiro||[]).map(s=>`<li>${esc(s)}</li>`).join('')}</ol><p><b>Legenda:</b> ${esc(x.legenda)}</p><p><b>CTA:</b> ${esc(x.cta)}</p></details>
+  <div class="row" style="margin-top:10px"><button class="btn sm" data-gsave="${i}">Salvar no banco</button></div></div>`;
+}
+async function gerar(seedText){
+  if(!sample||genBusy)return;
+  genBusy=true;genOut=[];renderView();
+  genCtl=new AbortController();
+  const ped=[genOpts.obj!=='qualquer'?'objetivo: '+OBJ[genOpts.obj].n:'',genOpts.pil!=='qualquer'?'pilar: '+PIL[genOpts.pil]:'',genOpts.fmt!=='qualquer'?'formato: '+genOpts.fmt:'',seedText?'ponto de partida: '+seedText:''].filter(Boolean).join('; ')||'livre';
+  const ja=POSTS.map(p=>p.tema).concat(Object.values(S.ideias).map(v=>v.tema)).slice(0,60).join(' | ');
+  const prompt=BRAND+`\n\nTemas já planejados (não repita): ${ja}\n\nCrie 3 ideias de post para o Instagram da Anna. Pedido: ${ped}.\nResponda só com um array JSON de 3 objetos: {"tema": string, "gancho": string (a frase da capa ou dos 3 primeiros segundos), "obj": "crescer"|"autoridade"|"vender", "pil": "est"|"ref"|"pes"|"not"|"bas", "fmt": "Carrossel"|"Reel", "porque": string (1 frase: por que este post ajuda o objetivo), "roteiro": [string] (6 a 9 itens, um por slide ou cena), "legenda": string (2 a 4 frases, sem repetir o carrossel), "cta": string}.`;
+  try{
+    const r=await sample.json(prompt,{signal:genCtl.signal,cache:false});
+    genOut=(Array.isArray(r)?r:[]).filter(x=>x&&x.tema).map(x=>({tema:String(x.tema),gancho:String(x.gancho||''),obj:OBJ[x.obj]?x.obj:'autoridade',pil:PIL[x.pil]?x.pil:'est',fmt:x.fmt==='Reel'?'Reel':'Carrossel',porque:String(x.porque||''),roteiro:Array.isArray(x.roteiro)?x.roteiro.map(String):[],legenda:String(x.legenda||''),cta:String(x.cta||'')}));
+    if(!genOut.length)toast('Não veio nenhuma ideia. Tente de novo.');
+  }catch(e){if(e.code!=='cancelled')toast(errMsg(e))}
+  genBusy=false;renderView();
+}
+function errMsg(e){const c=e&&e.code;if(c==='not_granted'||c==='sampling_disabled'){sample=null;return 'O Claude não foi liberado para esta página.'}if(c==='rate_limited')return 'Muitas gerações seguidas. Tente daqui a pouco.';if(c==='invalid_json')return 'A resposta veio fora do formato. Tente de novo.';return 'Não deu certo agora. Tente de novo.'}
+
+function vFormatos(){
+  return `<div class="head"><div><h2>Formatos e ganchos</h2><p>Os formatos que já funcionaram no seu perfil e os que valem testar, cada um com o objetivo que atende melhor. A estrutura serve de esqueleto: a referência e o exemplo é que deixam o post com a sua cara.</p></div></div>
+  <div class="grid2">${FORMATOS.map(f=>`<div class="card fmt"><div class="chips" style="margin-bottom:8px"><span class="chip o" style="--c:${OBJ[f.obj].c}">${OBJ[f.obj].n}</span><span class="chip">Esforço ${esc(f.e.toLowerCase())}</span></div><h3>${esc(f.n)}</h3><dl><dt>Quando usar</dt><dd>${esc(f.q)}</dd><dt>Estrutura</dt><dd>${esc(f.s)}</dd><dt>Exemplo</dt><dd>${esc(f.x)}</dd></dl></div>`).join('')}</div>
+  <div class="weekh"><h3>Banco de ganchos</h3><span>troque o que está entre colchetes</span></div>
+  <div class="grid3">${GANCHOS.map(g=>`<div class="card"><h3 style="margin-bottom:8px">${esc(g.t)}</h3>${g.f.map(f=>`<p style="font-size:15px">${esc(f)}</p>`).join('')}</div>`).join('')}</div>`;
+}
+
+function vTrends(){
+  return `<div class="head"><div><h2>Radar de trends</h2><p>Atualizado em ${TRENDS.data}. A maior parte vem de blogs de marketing, e algumas coisas ainda estão em teste. Como você mesma pede no dossiê, confira na fonte oficial antes de transformar em post. Para atualizar, peça ao Claude um novo radar.</p></div></div>
+  <div class="grid3">${TRENDS.itens.map(t=>`<div class="card trend"><span class="tag">${esc(t.tag)}</span><h3>${esc(t.t)}</h3><p style="font-size:15px">${esc(t.o)}</p><p style="font-size:15px"><b>Como usar:</b> ${esc(t.use)}</p>${t.src.length?`<p class="note">${t.src.map(s=>`<a href="${esc(s[1])}" target="_blank" rel="noopener">${esc(s[0])}</a>`).join(' · ')}</p>`:''}</div>`).join('')}</div>`;
+}
+
+let revText='',revAI='',revBusy=false;
+function checks(t){
+  const out=[];if(!t.trim())return out;
+  BANNED.forEach(([re,m])=>{const k=t.match(re);if(k)out.push({n:'alto',m,k:k[0]})});
+  const lines=t.split('\n').map(s=>s.trim()).filter(Boolean);
+  const curt=lines.filter(l=>l.split(/\s+/).length<=3&&/[.!]$/.test(l)).length;
+  if(curt>=3)out.push({n:'medio',m:`${curt} linhas muito curtas terminando em ponto. Parece frase quebrada para criar impacto; junte as ideias em frases completas.`});
+  const ex=(t.match(/!/g)||[]).length;if(ex>2)out.push({n:'medio',m:`${ex} pontos de exclamação. Um ou nenhum costuma soar mais natural.`});
+  const em=(t.match(/\p{Extended_Pictographic}/gu)||[]).length;if(em>5)out.push({n:'medio',m:`${em} emojis. Talvez esteja sobrando.`});
+  if(t.length>1300)out.push({n:'medio',m:`${t.length} caracteres. Se é legenda, veja se não está repetindo o carrossel.`});
+  const fim=t.slice(-220);if(!/\?/.test(fim)&&!/salv/i.test(fim))out.push({n:'medio',m:'O final não tem pergunta nem convite para salvar. Feche com um CTA específico ligado ao tema.'});
+  return out;
+}
+function vRevisar(){
+  const r=checks(revText);
+  return `<div class="head"><div><h2>Revisar texto</h2><p>Cole uma legenda ou roteiro. A página procura as expressões que você evita, promessas de resultado, frases quebradas e CTAs genéricos. O Claude pode sugerir uma versão revisada no seu tom.</p></div></div>
+  <div class="grid2"><div><textarea id="revIn" placeholder="Cole aqui a legenda ou o roteiro">${esc(revText)}</textarea><div class="row" style="margin-top:10px"><button class="btn" id="revAIgo" ${sample&&!revBusy?'':'disabled'}>${revBusy?'Revisando…':'Revisar com Claude'}</button></div>${sample?'':'<p class="note" style="margin-top:8px">A revisão com IA funciona quando a página está aberta no Claude.</p>'}</div>
+  <div id="revOut">${revOut(r)}</div></div>`;
+}
+function revOut(r){
+  return (revText.trim()?(r.length?r.map(x=>`<div class="flag ${x.n}"><b>${x.n==='alto'?'Evitar':'Atenção'}</b>${x.k?` · “${esc(x.k)}”`:''}<br>${esc(x.m)}</div>`).join(''):'<p class="ok">Nada da sua lista de evitar apareceu. Leia em voz alta uma vez antes de publicar.</p>'):'<p class="note">Os avisos aparecem aqui enquanto você digita.</p>')+(revAI?`<div class="sec"><h4>Versão sugerida pelo Claude</h4><div class="box" id="revAIbox">${esc(revAI)}</div><div class="row" style="margin-top:8px"><button class="btn sm ghost" data-copy="revAIbox">Copiar</button></div></div>`:'');
+}
+
+function vMetricas(){
+  const pubs=allItems().filter(p=>p.status==='publicado').map(p=>{const m=(p.kind==='post'?S.posts[p.id]:S.ideias[p.id])||{};return {...p,m}});
+  const n=v=>Number(v)||0;
+  const rows=pubs.filter(p=>n(p.m.alcance)>0);
+  const rate=p=>n(p.m.alcance)?(n(p.m.salvos)+n(p.m.compart))/n(p.m.alcance)*100:0;
+  const agg=k=>{const g={};rows.forEach(p=>{const key=p[k];(g[key]=g[key]||[]).push(rate(p))});return Object.entries(g).map(([key,a])=>({key,v:a.reduce((s,x)=>s+x,0)/a.length,c:a.length}))};
+  const byObj=agg('obj'),byFmt=agg('fmt'),byPil=agg('pil');
+  const mx=Math.max(1,...byObj.concat(byFmt,byPil).map(x=>x.v));
+  const bars=(a,lab,col)=>a.sort((x,y)=>y.v-x.v).map(x=>`<div class="bar"><span>${esc(lab(x.key))}</span><div style="width:${x.v/mx*100}%;--c:${col(x.key)}"></div><span class="n">${x.v.toFixed(1)}%</span></div>`).join('');
+  const best=rows.slice().sort((a,b)=>rate(b)-rate(a))[0];
+  return `<div class="head"><div><h2>Métricas</h2><p>Para cada post publicado, abra a ficha e anote alcance, salvamentos, compartilhamentos, comentários e conversas na DM. A taxa de interesse aqui é (salvos + compartilhamentos) ÷ alcance, um critério que vai além das curtidas.</p></div></div>
+  ${rows.length?`${best?`<div class="card" style="margin-bottom:16px"><span class="tag" style="font-size:13px;font-weight:600">Maior taxa de interesse até agora</span><h3 style="margin:6px 0">${esc(best.tema)}</h3><p class="note">${rate(best).toFixed(1)}% · ${esc(best.fmt)} · ${esc(PIL[best.pil]||'')}</p></div>`:''}
+  <div class="grid3"><div class="card"><h3 style="margin-bottom:12px">Por objetivo</h3>${bars(byObj,k=>OBJ[k]?.n||k,k=>OBJ[k]?.c||'var(--rosa)')}</div><div class="card"><h3 style="margin-bottom:12px">Por formato</h3>${bars(byFmt,k=>k,()=>'var(--rosa)')}</div><div class="card"><h3 style="margin-bottom:12px">Por pilar</h3>${bars(byPil,k=>PIL[k]||k,()=>'var(--lima)')}</div></div>
+  <div class="weekh"><h3>Posts publicados</h3><span>${rows.length} com métricas</span></div>
+  <div class="scroll"><table><thead><tr><th>Post</th><th class="n">Alcance</th><th class="n">Salvos</th><th class="n">Compart.</th><th class="n">Coment.</th><th class="n">DMs</th><th class="n">Interesse</th></tr></thead><tbody>${rows.map(p=>`<tr><td><a href="#metricas" data-open="${p.id}">${esc(p.tema)}</a></td><td class="n">${n(p.m.alcance).toLocaleString('pt-BR')}</td><td class="n">${n(p.m.salvos)}</td><td class="n">${n(p.m.compart)}</td><td class="n">${n(p.m.coment)}</td><td class="n">${n(p.m.dms)}</td><td class="n">${rate(p).toFixed(1)}%</td></tr>`).join('')}</tbody></table></div>`
+  :`<div class="empty">Ainda não há métricas. Quando publicar um post, abra a ficha dele, marque como "Publicado" e preencha os números dois ou três dias depois.</div>`}`;
+}
+
+function vMarca(){
+  return `<div class="head"><div><h2>Minha marca</h2><p>O resumo do briefing, do dossiê e do público-alvo que guia todas as ideias desta página e o gerador.</p></div></div>
+  <div class="grid2">
+   <div class="card"><h3 style="margin-bottom:8px">Posicionamento</h3><p>Social media e estrategista de conteúdo para profissionais e clínicas de saúde que já atuam no mercado. Gestão, estratégia, calendário editorial, copy e roteiros. Quase formada em Enfermagem, que aparece como perspectiva sobre o setor, não como orientação clínica.</p><p><b>O que defendo:</b> estratégia real antes de feed bonito, comunicar valor sem prometer resultado.</p></div>
+   <div class="card"><h3 style="margin-bottom:8px">Para quem</h3><p>Profissionais e gestores de clínicas com serviço ativo, de qualquer especialidade, que participam das decisões e topam construir uma estratégia.</p><p><b>Não é foco:</b> quem quer só feed bonito, volume barato ou garantia de viralização e pacientes.</p></div>
+   <div class="card"><h3 style="margin-bottom:8px">Pilares</h3><ul class="brandp">${Object.values(PIL).map(p=>`<li>${p}</li>`).join('')}</ul><p class="note">Ponto de partida: cerca de 80% profissional e 20% pessoal, sem ser regra fixa.</p></div>
+   <div class="card"><h3 style="margin-bottom:8px">Tom de voz</h3><p>Divertido, didático, direto e profissional. Parte de um filme, personagem ou situação reconhecível e chega a uma ideia própria. Frases completas, exemplos concretos, texto que soa bem lido em voz alta.</p></div>
+   <div class="card"><h3 style="margin-bottom:8px">Palavras que combinam</h3><div class="pill-list">${['estratégia de conteúdo','calendário editorial','posicionamento','dúvidas do público','rotina da clínica','comunicação da marca','conteúdo que preciso fazer','conteúdo que gostaria de criar','referências culturais','personalidade da marca'].map(w=>`<span>${w}</span>`).join('')}</div></div>
+   <div class="card"><h3 style="margin-bottom:8px">Expressões que evito</h3><div class="pill-list no">${['conteúdo incrível','estratégia infalível','bomba no Instagram','hack do algoritmo','viralize sua clínica','segredo para atrair pacientes','transforme sua presença digital','não é sobre X, é sobre Y'].map(w=>`<span>${w}</span>`).join('')}</div></div>
+  </div>`;
+}
+
+function renderView(){
+  const f={semana:vSemana,calendario:vCal,ideias:vIdeias,gerar:vGerar,formatos:vFormatos,trends:vTrends,revisar:vRevisar,metricas:vMetricas,marca:vMarca}[cur];
+  if(cur==='revisar'&&document.activeElement&&document.activeElement.id==='revIn')return;
+  $('#view').innerHTML=f();
+}
+
+let open=null,copyBusy=false,copyCtl=null;
+function findItem(id){const p=POSTS.find(x=>x.id===id);if(p)return {...p,kind:'post',...{d:(S.posts[id]||{}).data||p.d}};const v=S.ideias[id];return v?{...v,id,kind:'ideia',d:v.data||''}:null}
+function openDrawer(id){
+  const p=findItem(id);if(!p)return;open=id;
+  const m=(p.kind==='post'?S.posts[id]:S.ideias[id])||{};
+  const status=m.status||'ideia';
+  const arco=ARCOS.find(a=>a.id===p.a);
+  const dr=$('#drawer');
+  dr.innerHTML=`<div class="drawer" id="dwBg"><div class="panel" role="dialog" aria-modal="true" aria-label="Ficha do post">
+   <button class="btn sm ghost close" id="dwClose">Fechar</button>
+   <span class="date">${p.d?esc(dlabel(p.d)):'Sem data'}${arco?' · Arco '+arco.id+': '+esc(arco.n):''}</span>
+   <h2>${esc(p.tema)}</h2>${chips(p)}
+   <div class="sec"><h4>Status</h4><div class="seg" id="dwSt">${ST.map(s=>`<button class="${s===status?'on':''}" data-st="${s}">${STN[s]}</button>`).join('')}</div></div>
+   <div class="sec"><h4>Gancho</h4><p style="font-size:18px">“${esc(p.gancho)}”</p></div>
+   ${p.porque?`<div class="sec"><h4>Por que este post, agora</h4><p>${esc(p.porque)}</p><p class="note">${esc(OBJ[p.obj]?.f||'')}</p></div>`:''}
+   ${p.roteiro&&p.roteiro.length?`<div class="sec"><h4>${p.fmt==='Reel'?'Roteiro (cenas)':'Roteiro (slides)'}</h4><ol class="slides">${p.roteiro.map(s=>`<li>${esc(s)}</li>`).join('')}</ol></div>`:''}
+   ${p.legenda?`<div class="sec"><h4>Direção da legenda</h4><p>${esc(p.legenda)}</p></div>`:''}
+   ${p.cta?`<div class="sec"><h4>CTA</h4><p><b>${esc(p.cta)}</b></p></div>`:''}
+   ${p.prep?`<div class="sec"><h4>O que preparar</h4><p>${esc(p.prep)}</p></div>`:''}
+   <div class="sec"><h4>Copy completa</h4><div class="box" id="dwCopy" ${m.copy?'':'hidden'}>${esc(m.copy||'')}</div><div class="row" style="margin-top:8px"><button class="btn sm" id="dwGen" ${sample?'':'disabled'}>${m.copy?'Escrever outra versão com Claude':'Escrever com Claude'}</button><button class="btn sm ghost" id="dwStop" hidden>Parar</button>${m.copy?'<button class="btn sm ghost" data-copy="dwCopy">Copiar</button>':''}</div>${sample?'':'<p class="note" style="margin-top:6px">Disponível quando a página está aberta no Claude.</p>'}</div>
+   <div class="sec"><h4>Data</h4><input type="date" id="dwDate" value="${esc(p.d)}"></div>
+   <div class="sec"><h4>Métricas (preencha 2 ou 3 dias depois de publicar)</h4><div class="metrics">${[['alcance','Alcance'],['salvos','Salvamentos'],['compart','Compartilhamentos'],['coment','Comentários'],['dms','Conversas na DM'],['seg','Novos seguidores']].map(([k,n])=>`<label>${n}<input type="number" min="0" inputmode="numeric" data-m="${k}" value="${esc(m[k]??'')}"></label>`).join('')}</div></div>
+   <div class="sec"><h4>Anotações</h4><textarea id="dwNote" placeholder="O que funcionou, o que mudaria, comentários que chegaram">${esc(m.nota||'')}</textarea></div>
+   ${p.kind==='ideia'?'<div class="sec"><button class="btn ghost" data-del="'+esc(id)+'">Apagar esta ideia</button></div>':''}
+  </div></div>`;
+  dr.hidden=false;document.body.style.overflow='hidden';
+}
+function closeDrawer(){if(copyCtl)copyCtl.abort();open=null;$('#drawer').hidden=true;$('#drawer').innerHTML='';document.body.style.overflow=''}
+function patchOpen(patch){const p=findItem(open);if(!p)return;if(p.kind==='post')setPost(open,patch);else setIdea(open,{...S.ideias[open],...patch})}
+
+async function writeCopy(){
+  const p=findItem(open);if(!p||!sample||copyBusy)return;
+  copyBusy=true;copyCtl=new AbortController();
+  const box=$('#dwCopy'),gen=$('#dwGen'),stop=$('#dwStop');
+  box.hidden=false;box.textContent='Pensando…';gen.disabled=true;stop.hidden=false;
+  const prompt=BRAND+`\n\nEscreva a copy completa deste post, pronta para o design.\nTema: ${p.tema}\nObjetivo: ${OBJ[p.obj]?.n}\nFormato: ${p.fmt}\nGancho: ${p.gancho}\nRoteiro base: ${(p.roteiro||[]).join(' / ')}\nDireção da legenda: ${p.legenda||''}\nCTA: ${p.cta||''}\n\n${p.fmt==='Reel'?'Entregue: ROTEIRO com cada cena numerada (o que aparece + a fala + texto na tela), depois LEGENDA e CTA.':'Entregue: cada SLIDE numerado com o texto exato (título curto + 1 a 3 frases), depois LEGENDA (2 a 4 frases, sem repetir o carrossel) e CTA.'} Texto simples, sem markdown.`;
+  try{
+    const r=await sample(prompt,{signal:copyCtl.signal,cache:false,onText:({text})=>{box.textContent=text}});
+    if(open===p.id)patchOpen({copy:r.text});
+    if(open===p.id)openDrawer(p.id);
+  }catch(e){if(e.code!=='cancelled')toast(errMsg(e));box.textContent=e.text||'';}
+  copyBusy=false;copyCtl=null;
+  const g=$('#dwGen'),s=$('#dwStop');if(g)g.disabled=!sample;if(s)s.hidden=true;
+}
+
+async function reviewAI(){
+  if(!sample||revBusy||!revText.trim())return;
+  revBusy=true;revAI='';renderView();
+  try{
+    const r=await sample(BRAND+`\n\nRevise o texto abaixo no tom da Anna. Corrija expressões proibidas, promessas, clichês, frases quebradas e CTA genérico, mantendo a ideia. Devolva só o texto revisado, depois uma linha "O que mudei:" com até 4 itens curtos. Texto simples, sem markdown.\n\nTEXTO:\n${revText.slice(0,6000)}`,{cache:false,onText:({text})=>{revAI=text;const b=$('#revAIbox');if(b)b.textContent=text;else{const o=$('#revOut');if(o)o.innerHTML=revOut(checks(revText))}}});
+    revAI=r.text;
+  }catch(e){toast(errMsg(e));revAI=e.text||''}
+  revBusy=false;renderView();
+}
+
+document.addEventListener('click',async e=>{
+  const t=e.target.closest('button,a');if(!t)return;
+  if(t.dataset.open){e.preventDefault();openDrawer(t.dataset.open);return}
+  if(t.id==='dwClose'){closeDrawer();return}
+  if(t.dataset.st){patchOpen({status:t.dataset.st});document.querySelectorAll('#dwSt button').forEach(b=>b.classList.toggle('on',b===t));return}
+  if(t.id==='dwGen'){writeCopy();return}
+  if(t.id==='dwStop'){copyCtl&&copyCtl.abort();return}
+  if(t.dataset.copy){const el=document.getElementById(t.dataset.copy);try{await navigator.clipboard.writeText(el.textContent);toast('Copiado')}catch(err){const r=document.createRange();r.selectNodeContents(el);const s=getSelection();s.removeAllRanges();s.addRange(r);toast('Texto selecionado. Copie com Ctrl+C')}return}
+  if(t.dataset.del){setIdea(t.dataset.del,null);if(open===t.dataset.del)closeDrawer();toast('Ideia apagada');return}
+  if(t.dataset.keep){const b=BANCO[+t.dataset.keep];const id=newId();setIdea(id,{...b,status:'ideia',origem:'banco',criado:Date.now()});toast('Salva. Defina a data na ficha.');openDrawer(id);return}
+  if(t.id==='addIdea'){$('#ideaForm').hidden=false;$('#niTema').focus();return}
+  if(t.id==='niCancel'){$('#ideaForm').hidden=true;return}
+  if(t.id==='niSave'){const tema=$('#niTema').value.trim();if(!tema){toast('Escreva o tema');return}setIdea(newId(),{tema,gancho:$('#niGancho').value.trim(),fmt:$('#niFmt').value,obj:$('#niObj').value,pil:'est',status:'ideia',origem:'manual',criado:Date.now()});toast('Ideia salva');return}
+  const sg=t.closest('[data-seg]');if(sg&&t.dataset.v){genOpts[sg.dataset.seg]=t.dataset.v;genOpts.seed=($('#genSeed')||{}).value||'';renderView();return}
+  if(t.id==='genGo'){genOpts.seed=$('#genSeed').value.trim();gerar(genOpts.seed);return}
+  if(t.id==='genStop'){genCtl&&genCtl.abort();return}
+  if(t.dataset.gsave){const x=genOut[+t.dataset.gsave];if(!x)return;const id=newId();setIdea(id,{...x,status:'ideia',origem:'claude',criado:Date.now()});toast('Salva no banco');openDrawer(id);return}
+  if(t.id==='comboGo'){combo={r:REFS[Math.floor(Math.random()*REFS.length)],d:DUVIDAS[Math.floor(Math.random()*DUVIDAS.length)],f:FORMATOS[Math.floor(Math.random()*FORMATOS.length)]};renderView();return}
+  if(t.id==='comboAI'&&combo){genOpts.seed=`use ${combo.r} para responder "${combo.d}" no formato ${combo.f.n}`;gerar(genOpts.seed);return}
+  if(t.id==='comboSave'&&combo){setIdea(newId(),{tema:`${combo.r} e a pergunta: ${combo.d}`,gancho:`O que ${combo.r} tem a ver com esta pergunta: ${combo.d.toLowerCase()}`,fmt:combo.f.n.includes('Reel')?'Reel':'Carrossel',obj:combo.f.obj,pil:'ref',status:'ideia',origem:'combinador',criado:Date.now()});toast('Salva no banco');return}
+  if(t.id==='revAIgo'){reviewAI();return}
+});
+document.addEventListener('click',e=>{if(e.target.id==='dwBg')closeDrawer()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)closeDrawer()});
+document.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='fObj'){fObj=t.value;renderView()}
+  if(t.id==='fFmt'){fFmt=t.value;renderView()}
+  if(t.id==='fBanco'){fBanco=t.value;renderView()}
+  if(t.dataset.m){patchOpen({[t.dataset.m]:t.value===''?'':Number(t.value)})}
+  if(t.id==='dwNote'){patchOpen({nota:t.value})}
+  if(t.id==='dwDate'&&t.value){const p=findItem(open);if(p.kind==='post')patchOpen({data:t.value===POSTS.find(x=>x.id===open).d?'':t.value});else patchOpen({data:t.value});toast('Data atualizada')}
+});
+document.addEventListener('input',e=>{if(e.target.id==='revIn'){revText=e.target.value;const o=$('#revOut');if(o)o.innerHTML=revOut(checks(revText))}});
+window.addEventListener('hashchange',route);
+
+async function boot(){
+  loadLocal();renderTop();route();
+  if(!window.claude||!claude.use)return;
+  claude.use('sample').then(s=>{sample=s;if(s&&(cur==='gerar'||cur==='revisar'))renderView()}).catch(()=>{});
+  let d=null;try{d=await claude.use('db')}catch(e){}
+  if(!d)return;
+  db=d;S.mode='db';
+  const local={posts:{...S.posts},ideias:{...S.ideias}};
+  let got=0;const timer=setTimeout(()=>{if(got<2)toast('Ainda carregando seus dados…')},10000);
+  const onErr=()=>{clearTimeout(timer);toast('Não consegui carregar os dados salvos')};
+  db.collection('posts').onSnapshot(snap=>{const o={};snap.docs.forEach(x=>o[x.id]=x.data());S.posts=o;if(!snap.metadata.fromCache){got++;if(got>=2)clearTimeout(timer)}renderTop();if(!open)renderView()},onErr);
+  db.collection('ideias').onSnapshot(snap=>{const o={};snap.docs.forEach(x=>o[x.id]=x.data());S.ideias=o;if(!snap.metadata.fromCache){got++;if(got>=2)clearTimeout(timer)}renderTop();if(!open)renderView()},onErr);
+}
+boot();
+}
+</script>
